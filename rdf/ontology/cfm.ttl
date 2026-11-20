@@ -1,0 +1,89 @@
+# cfm -- a small vocabulary for describing how spreadsheet rows become RDF.
+# Read by rdf/src/build_rdf.py. The mappings themselves are in cfa-mapping.ttl.
+#
+# Templates: "{name}" is replaced by a variable: a column of the current row,
+# a derived variable (cfm:derive), the cfm:forEachSplit variable, the family
+# variables (FAMILY, and f_<suffix> for each of cfm:familySuffixes), or,
+# inside a property map, {value} and {pair}.
+# Built-ins: {file_name}, {file_path}. In IRI templates (cfm:subject,
+# cfm:objectTemplate, cfm:onSubject) a leading "prefix:" is expanded with the
+# prefixes declared in the mapping file, and each substituted value has
+# characters outside [A-Za-z0-9._-] replaced by "_".
+
+@prefix cfm:  <https://w3id.org/cdisc-for-ai/mapping-vocab#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<https://w3id.org/cdisc-for-ai/mapping-vocab> a owl:Ontology ;
+    rdfs:label "cdisc-for-ai mapping vocabulary" .
+
+cfm:SourceFile  a owl:Class ; rdfs:comment "A workbook in the repository." .
+cfm:path        a owl:DatatypeProperty ; rdfs:comment "Path of the workbook, relative to the repository root." .
+
+cfm:RunProfile  a owl:Class ; rdfs:comment "What to build: scope and output file. Chosen with --profile." .
+cfm:name        a owl:DatatypeProperty .
+cfm:output      a owl:DatatypeProperty ; rdfs:comment "Output Turtle path, relative to the repository root." .
+cfm:testCodes   a owl:DatatypeProperty ; rdfs:comment "Space-separated test codes in scope." .
+cfm:testCodesFrom a owl:ObjectProperty ; rdfs:comment "A column whose values are added to the test codes in scope (cfm:sourceFile, cfm:sourceSheet, cfm:column)." .
+cfm:domainsFrom a owl:ObjectProperty ; rdfs:comment "Domains in scope: values of cfm:column on rows whose cfm:filterColumn is a test code in scope." .
+cfm:filterColumn a owl:DatatypeProperty .
+
+cfm:RowMapping  a owl:Class ; rdfs:comment "Turns each row of one sheet into one subject (or several, with cfm:forEachSplit / cfm:forEachFamily)." .
+cfm:phase       a owl:DatatypeProperty ; rdfs:comment "Mappings run in phase order; phase 2 mappings may use references recorded in phase 1." .
+cfm:sourceFile  a owl:ObjectProperty ; rdfs:range cfm:SourceFile .
+cfm:sourceSheet a owl:DatatypeProperty .
+cfm:scopeColumn a owl:DatatypeProperty ; rdfs:comment "Keep only rows whose value in this column is in the scope set named by cfm:scopeSet." .
+cfm:scopeSet    a owl:DatatypeProperty ; rdfs:comment "testcd or domain." .
+cfm:restrictTo  a owl:ObjectProperty ; rdfs:comment "Keep only rows whose cfm:keyTemplate is in reference set cfm:referenceSet. Every reference must be matched, or the build stops." .
+cfm:forEachSplit a owl:ObjectProperty ; rdfs:comment "One subject per part of cfm:column split on cfm:separator; the part is bound to cfm:as." .
+cfm:forEachFamily a owl:DatatypeProperty ; rdfs:comment "Regex on column names; group 1 names a column family. One subject per family per row." .
+cfm:familySuffixes a owl:DatatypeProperty ; rdfs:comment "Space-separated column suffixes of a family; suffix s of family F is bound to f_s from column F_s." .
+cfm:requireAny  a owl:DatatypeProperty ; rdfs:comment "Skip the subject unless at least one of these variables is non-empty." .
+cfm:requireMatch a owl:ObjectProperty ; rdfs:comment "Stop the build unless variable cfm:column fully matches regex cfm:matches." .
+cfm:derive      a owl:ObjectProperty ; rdfs:comment "A derived variable, computed in cfm:order." .
+cfm:subject     a owl:DatatypeProperty ; rdfs:comment "IRI template for the subject." .
+cfm:class       a owl:ObjectProperty ; rdfs:comment "rdf:type given to each subject." .
+cfm:property    a owl:ObjectProperty ; rdfs:comment "A property map." .
+
+# derive steps
+cfm:as          a owl:DatatypeProperty .
+cfm:order       a owl:DatatypeProperty .
+cfm:fromVar     a owl:DatatypeProperty .
+cfm:splitParts  a owl:DatatypeProperty ; rdfs:comment "Split on this separator into the space-separated cfm:partNames (prefixed with cfm:as and _)." .
+cfm:partNames   a owl:DatatypeProperty .
+cfm:expectParts a owl:DatatypeProperty ; rdfs:comment "Stop the build if the split does not give exactly this many parts." .
+cfm:splitOn     a owl:DatatypeProperty .
+cfm:findAll     a owl:DatatypeProperty ; rdfs:comment "Regex; its matches (group 1) form the list for cfm:pick." .
+cfm:pick        a owl:DatatypeProperty ; rdfs:comment "Index into the split or matches; empty if out of range." .
+cfm:replaceFrom a owl:DatatypeProperty .
+cfm:replaceTo   a owl:DatatypeProperty .
+cfm:lookupFile  a owl:ObjectProperty .
+cfm:lookupSheet a owl:DatatypeProperty .
+cfm:keyColumn   a owl:DatatypeProperty .
+cfm:valueColumn a owl:DatatypeProperty .
+
+# property maps
+cfm:predicate   a owl:ObjectProperty .
+cfm:column      a owl:DatatypeProperty ; rdfs:comment "Variable whose value(s) give the object; bound to {value}." .
+cfm:split       a owl:DatatypeProperty ; rdfs:comment "Separator; one triple per non-empty part." .
+cfm:pairedColumn a owl:DatatypeProperty ; rdfs:comment "Parallel list, bound to {pair}; unequal lengths stop the build." .
+cfm:pairedSplit a owl:DatatypeProperty .
+cfm:literalTemplate a owl:DatatypeProperty ; rdfs:comment "Template for a literal object (instead of cfm:column)." .
+cfm:objectTemplate a owl:DatatypeProperty ; rdfs:comment "IRI template for the object." .
+cfm:objectConstant a owl:ObjectProperty ; rdfs:comment "A fixed object." .
+cfm:onSubject   a owl:DatatypeProperty ; rdfs:comment "IRI template for a different subject (e.g. put labels on the NCIt concept)." .
+cfm:tokensFrom  a owl:ObjectProperty ; rdfs:comment "Look the value up among individuals with this rdf:type or cfm:inTokenScheme, by cfm:sourceToken; fall back to cfm:objectTemplate, or stop." .
+cfm:sourceToken a owl:AnnotationProperty ; rdfs:comment "The spreadsheet string that stands for this individual." .
+cfm:inTokenScheme a owl:AnnotationProperty .
+cfm:valuePattern a owl:DatatypeProperty ; rdfs:comment "Regex the value must match (after token lookup), or the build stops." .
+cfm:skipUnlessPattern a owl:DatatypeProperty ; rdfs:comment "Regex; values that do not match are skipped." .
+cfm:datatype    a owl:ObjectProperty .
+cfm:trueToken   a owl:DatatypeProperty ; rdfs:comment "For xsd:boolean: the string that means true." .
+cfm:onlyIfPresent a owl:DatatypeProperty .
+cfm:onlyIfEmpty a owl:DatatypeProperty .
+cfm:onlyIfColumn a owl:DatatypeProperty .
+cfm:inValues    a owl:DatatypeProperty ; rdfs:comment "Space-separated values for cfm:onlyIfColumn." .
+cfm:matches     a owl:DatatypeProperty ; rdfs:comment "Regex for cfm:onlyIfColumn." .
+cfm:recordsReference a owl:ObjectProperty ; rdfs:comment "Record cfm:keyTemplate in cfm:referenceSet for each object (skipped if a variable in the key is empty)." .
+cfm:referenceSet a owl:DatatypeProperty .
+cfm:keyTemplate a owl:DatatypeProperty .

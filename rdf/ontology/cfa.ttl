@@ -1,0 +1,186 @@
+# cdisc-for-ai vocabulary (cfa) -- DRAFT, first pass on the glucose slice.
+#
+# Design rule: CDISC artifacts (test codes, Biomedical Concepts, Dataset
+# Specializations, codelists, variables) get their own IRIs in cfi:. NCIt
+# concepts keep their NCIt IRIs and are never typed with cfa: classes. Every
+# link between the two says which kind of link it is, following the link kinds
+# in link-semantics/docs/Link_Semantics.md (cfa:linkKind on each property).
+#
+# Namespace is provisional (w3id not registered).
+
+@prefix cfa:  <https://w3id.org/cdisc-for-ai/ontology#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+
+<https://w3id.org/cdisc-for-ai/ontology> a owl:Ontology ;
+    rdfs:label "cdisc-for-ai vocabulary (draft)" ;
+    rdfs:comment "Makes the links between SDTM CT, NCIt and COSMoS explicit and first-order. Draft for discussion; built from the cdisc-for-ai reference files." .
+
+cfa:linkKind a owl:AnnotationProperty ;
+    rdfs:comment "Which of the link kinds in Link_Semantics.md a property expresses: identity, membership, binding, denotation, pinned_value, value_list, category_tag, mapping." .
+
+# ---------------------------------------------------------------- classes
+
+cfa:Domain a owl:Class ; rdfs:label "SDTM domain" .
+
+cfa:Variable a owl:Class ; rdfs:label "SDTM variable (in a domain)" ;
+    rdfs:comment "A domain variable such as LBSPEC. Carries the facet position recorded in Variable_Meaning / Axis_Meaning." .
+
+cfa:TestCode a owl:Class ; rdfs:label "SDTM test code (domain-scoped)" ;
+    rdfs:comment "A TESTCD in one domain. Codes are mnemonics, not identifiers (CMV in MB vs MK), so the IRI is domain + code; cfa:isIdentifiedBy gives the NCIt identity." .
+
+cfa:BiomedicalConcept a owl:Class ; rdfs:label "COSMoS Biomedical Concept" .
+
+cfa:DatasetSpecialization a owl:Class ; rdfs:label "COSMoS SDTM Dataset Specialization" ;
+    rdfs:comment "DS codes are not unique across domains, so the IRI is domain + DS code." .
+
+cfa:VariableSpecialization a owl:Class ; rdfs:label "Variable constraint" ;
+    rdfs:comment "What one Dataset Specialization says about one variable: a pinned value, a list of permitted values, and/or the codelist it draws from. Replaces the *_value / *_value_list / *_codelist column families." .
+
+cfa:Codelist a owl:Class ; rdfs:subClassOf skos:ConceptScheme ; rdfs:label "CDISC codelist" .
+
+cfa:CodelistMembership a owl:Class ; rdfs:label "Codelist membership" ;
+    rdfs:comment "One term in one codelist. The submission value belongs to the membership, not to the NCIt concept, because the same concept can sit in several codelists." .
+
+cfa:Observable a owl:Class ; rdfs:label "Observable" ;
+    rdfs:comment "What makes an observation specific: a component plus the identity facets (system, method, scale). This is Kerstin Forsberg's working position (Observable_Key in the Findings files), not a published CDISC fact." .
+
+cfa:FacetPosition a owl:Class ; rdfs:label "Facet position" .
+cfa:Component a cfa:FacetPosition ; rdfs:label "component" .
+cfa:System    a cfa:FacetPosition ; rdfs:label "system" .
+cfa:Method    a cfa:FacetPosition ; rdfs:label "method" .
+cfa:Scale     a cfa:FacetPosition ; rdfs:label "scale" .
+cfa:ComponentDetail a cfa:FacetPosition ; rdfs:label "component detail" ;
+    rdfs:comment "The test detail that is part of the component in MB, MI and GF keys (e.g. DETECTION). Used only with cfa:leavesOpen / cfa:doesNotKeyOn; it is not one of the positions in Axis_Meaning." .
+cfa:OpenPosition a cfa:FacetPosition ; rdfs:label "open" ; rdfs:comment "No source settles whether the facet identifies the observable." .
+
+cfa:FacetKind a owl:Class ; rdfs:label "Facet kind" .
+cfa:ObservableFacet a cfa:FacetKind ; rdfs:label "observable" ; rdfs:comment "What is determined (specimen, method, scale)." .
+cfa:PracticeFacet   a cfa:FacetKind ; rdfs:label "practice" ; rdfs:comment "How the observation is brought about (fasting, position, time point)." .
+cfa:RecordFacet     a cfa:FacetKind ; rdfs:label "record" ; rdfs:comment "How the row is filed (category, record links)." .
+cfa:OpenFacet       a cfa:FacetKind ; rdfs:label "open" .
+
+cfa:ScaleReading a owl:Class ; rdfs:label "Scale reading (per DSS)" .
+cfa:WithUnits    a cfa:ScaleReading ; rdfs:label "with units" .
+cfa:WithoutUnits a cfa:ScaleReading ; rdfs:label "without units" .
+
+cfa:SourceFile a owl:Class ; rdfs:label "cdisc-for-ai reference file" .
+
+# ---------------------------------------------------------------- properties
+
+cfa:inDomain a owl:ObjectProperty ; rdfs:range cfa:Domain .
+
+cfa:isIdentifiedBy a owl:ObjectProperty ;
+    rdfs:comment "The NCIt concept whose C-code identifies this CDISC artifact: a test code (the CT term's code), a Biomedical Concept (its bc id) or a codelist. One property for the identity link kind." ;
+    cfa:linkKind "identity" .
+
+cfa:bcParent a owl:ObjectProperty ; rdfs:domain cfa:BiomedicalConcept ;
+    rdfs:comment "The NCIt concept COSMoS gives as the BC's parent." .
+
+cfa:bcCategory a owl:DatatypeProperty ; rdfs:domain cfa:BiomedicalConcept ;
+    rdfs:comment "COSMoS category token. The object is a label, not a concept." ; cfa:linkKind "category_tag" .
+
+cfa:resultScale a owl:DatatypeProperty ; rdfs:domain cfa:BiomedicalConcept .
+
+cfa:specializes a owl:ObjectProperty ; rdfs:domain cfa:DatasetSpecialization ; rdfs:range cfa:BiomedicalConcept .
+
+cfa:testCode a owl:ObjectProperty ; rdfs:domain cfa:DatasetSpecialization ; rdfs:range cfa:TestCode .
+
+cfa:hasVariableSpecialization a owl:ObjectProperty ; rdfs:domain cfa:DatasetSpecialization ; rdfs:range cfa:VariableSpecialization .
+
+cfa:variable a owl:ObjectProperty ; rdfs:domain cfa:VariableSpecialization ; rdfs:range cfa:Variable .
+
+cfa:pinnedValue a owl:ObjectProperty ; rdfs:domain cfa:VariableSpecialization ;
+    rdfs:comment "The variable is fixed to this NCIt concept in this specialization." ; cfa:linkKind "pinned_value" .
+
+cfa:pinnedLiteral a owl:DatatypeProperty ; rdfs:domain cfa:VariableSpecialization ;
+    rdfs:comment "Fixed value published without an NCIt code (e.g. LBCAT)." ; cfa:linkKind "pinned_value" .
+
+cfa:permittedValue a owl:ObjectProperty ; rdfs:domain cfa:VariableSpecialization ;
+    rdfs:comment "One of the values the variable is restricted to in this specialization." ; cfa:linkKind "value_list" .
+
+cfa:permittedLiteral a owl:DatatypeProperty ; rdfs:domain cfa:VariableSpecialization ; cfa:linkKind "value_list" .
+
+cfa:drawsFrom a owl:ObjectProperty ; rdfs:range cfa:Codelist ;
+    rdfs:comment "The codelist the variable takes its values from." ; cfa:linkKind "binding" .
+
+cfa:extensible a owl:DatatypeProperty ; rdfs:domain cfa:Codelist ; rdfs:range xsd:boolean .
+
+cfa:inCodelist a owl:ObjectProperty ; rdfs:domain cfa:CodelistMembership ; rdfs:range cfa:Codelist ; cfa:linkKind "membership" .
+cfa:term a owl:ObjectProperty ; rdfs:domain cfa:CodelistMembership ; cfa:linkKind "membership" .
+cfa:submissionValue a owl:DatatypeProperty ; rdfs:domain cfa:CodelistMembership .
+
+cfa:loinc a owl:ObjectProperty ;
+    rdfs:comment "LOINC code given by COSMoS for the DSS (or BC)." ; cfa:linkKind "mapping" .
+
+cfa:realizes a owl:ObjectProperty ; rdfs:domain cfa:DatasetSpecialization ; rdfs:range cfa:Observable ;
+    rdfs:comment "The observable this DSS specifies (per Observable_Key). Two DSSs realizing one observable = Key_Shared_With." .
+
+cfa:component a owl:ObjectProperty ; rdfs:domain cfa:Observable .
+cfa:componentDetail a owl:ObjectProperty ; rdfs:domain cfa:Observable ;
+    rdfs:comment "Test detail that is part of the component (MB, MI, GF: e.g. DETECTION, VIRAL LOAD)." .
+cfa:system    a owl:ObjectProperty ; rdfs:domain cfa:Observable .
+cfa:method    a owl:ObjectProperty ; rdfs:domain cfa:Observable .
+cfa:scale     a owl:ObjectProperty ; rdfs:domain cfa:Observable ; rdfs:range cfa:ScaleReading .
+cfa:leavesOpen a owl:ObjectProperty ; rdfs:domain cfa:Observable ; rdfs:range cfa:FacetPosition ;
+    rdfs:comment "The DSS behind this observable does not fix this facet (UNPINNED in Observable_Key)." .
+cfa:doesNotKeyOn a owl:ObjectProperty ; rdfs:domain cfa:Observable ; rdfs:range cfa:FacetPosition ;
+    rdfs:comment "This facet is not part of the observable key in this domain (- in Observable_Key), e.g. specimen and method in MB." .
+cfa:viaBiomedicalConcept a owl:ObjectProperty ; rdfs:domain cfa:Observable ; rdfs:range cfa:BiomedicalConcept .
+
+cfa:facetPosition a owl:ObjectProperty ; rdfs:domain cfa:Variable ; rdfs:range cfa:FacetPosition .
+cfa:facetKind     a owl:ObjectProperty ; rdfs:domain cfa:Variable ; rdfs:range cfa:FacetKind .
+cfa:positionStatus a owl:DatatypeProperty ; rdfs:domain cfa:Variable ; rdfs:comment "accepted / proposed." .
+cfa:positionBasis  a owl:DatatypeProperty ; rdfs:domain cfa:Variable .
+cfa:positionBasisNote a owl:DatatypeProperty ; rdfs:domain cfa:Variable .
+
+cfa:umlsCui a owl:DatatypeProperty .
+cfa:contentSha256 a owl:DatatypeProperty .
+cfa:sourceVersion a owl:DatatypeProperty .
+
+# ---------------------------------------------------------------- labels (sentence rule)
+# Read subject - label - object as a sentence. IRIs are unchanged; only labels.
+
+cfa:inDomain        rdfs:label "belongs to domain" .
+cfa:isIdentifiedBy  rdfs:label "is identified by" .
+cfa:bcParent        rdfs:label "is filed under" .
+cfa:specializes     rdfs:label "specializes" .
+cfa:testCode        rdfs:label "is recorded under test code" .
+cfa:realizes        rdfs:label "specifies observable" .
+cfa:hasVariableSpecialization rdfs:label "imposes" .
+cfa:variable        rdfs:label "constrains" .
+cfa:pinnedValue     rdfs:label "pins the value to" .
+cfa:pinnedLiteral   rdfs:label "pins the value to" .
+cfa:permittedValue  rdfs:label "permits" .
+cfa:permittedLiteral rdfs:label "permits" .
+cfa:drawsFrom       rdfs:label "draws its values from" .
+cfa:inCodelist      rdfs:label "is membership in" .
+cfa:term            rdfs:label "is membership of" .
+cfa:loinc           rdfs:label "is coded in LOINC as" .
+cfa:viaBiomedicalConcept rdfs:label "falls under" .
+cfa:component       rdfs:label "refines test" .
+cfa:componentDetail rdfs:label "is qualified by test detail" .
+cfa:system          rdfs:label "is measured in" .
+cfa:method          rdfs:label "is determined by method" .
+cfa:scale           rdfs:label "is reported" .
+cfa:leavesOpen      rdfs:label "leaves open" .
+cfa:doesNotKeyOn    rdfs:label "does not key on" .
+cfa:facetPosition   rdfs:label "occupies position" .
+cfa:facetKind       rdfs:label "is a facet of kind" .
+
+# datatype properties
+cfa:bcCategory      rdfs:label "is categorized as" .
+cfa:resultScale     rdfs:label "can be reported on scale" .
+cfa:submissionValue rdfs:label "is submitted as" .
+cfa:extensible      rdfs:label "is extensible" .
+cfa:umlsCui         rdfs:label "is coded in UMLS as" .
+cfa:positionStatus  rdfs:label "position is" .
+cfa:positionBasis   rdfs:label "position rests on" .
+cfa:positionBasisNote rdfs:label "position is explained by" .
+cfa:sourceVersion   rdfs:label "is built from version" .
+cfa:contentSha256   rdfs:label "records sheet hash" .
+cfa:linkKind        rdfs:label "expresses link kind" .

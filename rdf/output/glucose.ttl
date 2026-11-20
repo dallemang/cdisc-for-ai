@@ -1,0 +1,840 @@
+@prefix bc: <https://w3id.org/cdisc-for-ai/id/bc/> .
+@prefix cfa: <https://w3id.org/cdisc-for-ai/ontology#> .
+@prefix cl: <https://w3id.org/cdisc-for-ai/id/codelist/> .
+@prefix clm: <https://w3id.org/cdisc-for-ai/id/member/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dom: <https://w3id.org/cdisc-for-ai/id/domain/> .
+@prefix dss: <https://w3id.org/cdisc-for-ai/id/dss/> .
+@prefix loinc: <https://loinc.org/> .
+@prefix ncit: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#> .
+@prefix obs: <https://w3id.org/cdisc-for-ai/id/observable/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix src: <https://w3id.org/cdisc-for-ai/id/source/> .
+@prefix tc: <https://w3id.org/cdisc-for-ai/id/testcode/> .
+@prefix var: <https://w3id.org/cdisc-for-ai/id/variable/> .
+@prefix vs: <https://w3id.org/cdisc-for-ai/id/vs/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+dss:LB-GLUCBLD a cfa:DatasetSpecialization ;
+    rdfs:label "Glucose Concentration in Blood" ;
+    dct:modified "2026-05-26"^^xsd:date ;
+    skos:notation "GLUCBLD" ;
+    prov:wasDerivedFrom src:Specimen_Findings ;
+    cfa:hasVariableSpecialization vs:LB-GLUCBLD-LBCAT,
+        vs:LB-GLUCBLD-LBFAST,
+        vs:LB-GLUCBLD-LBORRESU,
+        vs:LB-GLUCBLD-LBSPEC,
+        vs:LB-GLUCBLD-LBSTRESU ;
+    cfa:inDomain dom:LB ;
+    cfa:realizes obs:C105585-C105585-C12434-UNITS-UNPINNED ;
+    cfa:specializes bc:C105585 ;
+    cfa:testCode tc:LB-GLUC .
+
+dss:LB-GLUCPE a cfa:DatasetSpecialization ;
+    rdfs:label "Plasma Equivalent Glucose" ;
+    dct:modified "2026-05-26"^^xsd:date ;
+    skos:notation "GLUCPE" ;
+    prov:wasDerivedFrom src:Specimen_Findings ;
+    cfa:hasVariableSpecialization vs:LB-GLUCPE-LBCAT,
+        vs:LB-GLUCPE-LBFAST,
+        vs:LB-GLUCPE-LBORRESU,
+        vs:LB-GLUCPE-LBSPEC,
+        vs:LB-GLUCPE-LBSTRESU ;
+    cfa:inDomain dom:LB ;
+    cfa:realizes obs:C105585-C163446-C120839-UNITS-UNPINNED ;
+    cfa:specializes bc:C105585 ;
+    cfa:testCode tc:LB-GLUCPE .
+
+dss:LB-GLUCPL a cfa:DatasetSpecialization ;
+    rdfs:label "Glucose Concentration in Plasma" ;
+    dct:modified "2026-05-26"^^xsd:date ;
+    skos:notation "GLUCPL" ;
+    prov:wasDerivedFrom src:Specimen_Findings ;
+    cfa:hasVariableSpecialization vs:LB-GLUCPL-LBCAT,
+        vs:LB-GLUCPL-LBFAST,
+        vs:LB-GLUCPL-LBORRESU,
+        vs:LB-GLUCPL-LBSPEC,
+        vs:LB-GLUCPL-LBSTRESU ;
+    cfa:inDomain dom:LB ;
+    cfa:realizes obs:C105585-C105585-C13356-UNITS-UNPINNED ;
+    cfa:specializes bc:C105585 ;
+    cfa:testCode tc:LB-GLUC .
+
+dss:LB-GLUCSER a cfa:DatasetSpecialization ;
+    rdfs:label "Glucose Concentration in Serum" ;
+    dct:modified "2026-05-26"^^xsd:date ;
+    skos:notation "GLUCSER" ;
+    prov:wasDerivedFrom src:Specimen_Findings ;
+    cfa:hasVariableSpecialization vs:LB-GLUCSER-LBCAT,
+        vs:LB-GLUCSER-LBFAST,
+        vs:LB-GLUCSER-LBORRESU,
+        vs:LB-GLUCSER-LBSPEC,
+        vs:LB-GLUCSER-LBSTRESU ;
+    cfa:inDomain dom:LB ;
+    cfa:realizes obs:C105585-C105585-C13325-UNITS-UNPINNED ;
+    cfa:specializes bc:C105585 ;
+    cfa:testCode tc:LB-GLUC .
+
+dss:LB-GLUCSERPL a cfa:DatasetSpecialization ;
+    rdfs:label "Glucose Concentration in Serum or Plasma" ;
+    dct:modified "2026-05-26"^^xsd:date ;
+    skos:notation "GLUCSERPL" ;
+    prov:wasDerivedFrom src:Specimen_Findings ;
+    cfa:hasVariableSpecialization vs:LB-GLUCSERPL-LBCAT,
+        vs:LB-GLUCSERPL-LBFAST,
+        vs:LB-GLUCSERPL-LBORRESU,
+        vs:LB-GLUCSERPL-LBSPEC,
+        vs:LB-GLUCSERPL-LBSTRESU ;
+    cfa:inDomain dom:LB ;
+    cfa:realizes obs:C105585-C105585-C13325-UNITS-UNPINNED ;
+    cfa:specializes bc:C105585 ;
+    cfa:testCode tc:LB-GLUC .
+
+dss:LB-GLUCUA a cfa:DatasetSpecialization ;
+    rdfs:label "Glucose Presence in Urine by Test Strip" ;
+    dct:modified "2026-05-26"^^xsd:date ;
+    skos:notation "GLUCUA" ;
+    prov:wasDerivedFrom src:Specimen_Findings ;
+    cfa:hasVariableSpecialization vs:LB-GLUCUA-LBCAT,
+        vs:LB-GLUCUA-LBFAST,
+        vs:LB-GLUCUA-LBMETHOD,
+        vs:LB-GLUCUA-LBSPEC ;
+    cfa:inDomain dom:LB ;
+    cfa:loinc loinc:25428-4 ;
+    cfa:realizes obs:C105585-C105585-C13283-NO_UNITS-C50322 ;
+    cfa:specializes bc:C105585 ;
+    cfa:testCode tc:LB-GLUC .
+
+dss:LB-GLUCURIN a cfa:DatasetSpecialization ;
+    rdfs:label "Glucose Concentration in Urine" ;
+    dct:modified "2026-05-26"^^xsd:date ;
+    skos:notation "GLUCURIN" ;
+    prov:wasDerivedFrom src:Specimen_Findings ;
+    cfa:hasVariableSpecialization vs:LB-GLUCURIN-LBCAT,
+        vs:LB-GLUCURIN-LBFAST,
+        vs:LB-GLUCURIN-LBORRESU,
+        vs:LB-GLUCURIN-LBSPEC,
+        vs:LB-GLUCURIN-LBSTRESU ;
+    cfa:inDomain dom:LB ;
+    cfa:realizes obs:C105585-C105585-C13283-UNITS-UNPINNED ;
+    cfa:specializes bc:C105585 ;
+    cfa:testCode tc:LB-GLUC .
+
+dss:LB-GLUCURINPRES a cfa:DatasetSpecialization ;
+    rdfs:label "Glucose Presence in Urine" ;
+    dct:modified "2026-05-26"^^xsd:date ;
+    skos:notation "GLUCURINPRES" ;
+    prov:wasDerivedFrom src:Specimen_Findings ;
+    cfa:hasVariableSpecialization vs:LB-GLUCURINPRES-LBCAT,
+        vs:LB-GLUCURINPRES-LBFAST,
+        vs:LB-GLUCURINPRES-LBSPEC ;
+    cfa:inDomain dom:LB ;
+    cfa:loinc loinc:2349-9 ;
+    cfa:realizes obs:C105585-C105585-C13283-NO_UNITS-UNPINNED ;
+    cfa:specializes bc:C105585 ;
+    cfa:testCode tc:LB-GLUC .
+
+clm:C66742-C49487 a cfa:CodelistMembership ;
+    rdfs:label "NY: N" ;
+    cfa:inCodelist cl:C66742 ;
+    cfa:submissionValue "N" ;
+    cfa:term ncit:C49487 .
+
+clm:C66742-C49488 a cfa:CodelistMembership ;
+    rdfs:label "NY: Y" ;
+    cfa:inCodelist cl:C66742 ;
+    cfa:submissionValue "Y" ;
+    cfa:term ncit:C49488 .
+
+clm:C71620-C42576 a cfa:CodelistMembership ;
+    rdfs:label "UNIT: g/L" ;
+    cfa:inCodelist cl:C71620 ;
+    cfa:submissionValue "g/L" ;
+    cfa:term ncit:C42576 .
+
+clm:C71620-C48508 a cfa:CodelistMembership ;
+    rdfs:label "UNIT: umol/L" ;
+    cfa:inCodelist cl:C71620 ;
+    cfa:submissionValue "umol/L" ;
+    cfa:term ncit:C48508 .
+
+clm:C71620-C64387 a cfa:CodelistMembership ;
+    rdfs:label "UNIT: mmol/L" ;
+    cfa:inCodelist cl:C71620 ;
+    cfa:submissionValue "mmol/L" ;
+    cfa:term ncit:C64387 .
+
+clm:C71620-C67015 a cfa:CodelistMembership ;
+    rdfs:label "UNIT: mg/dL" ;
+    cfa:inCodelist cl:C71620 ;
+    cfa:submissionValue "mg/dL" ;
+    cfa:term ncit:C67015 .
+
+clm:C78734-C120839 a cfa:CodelistMembership ;
+    rdfs:label "SPECTYPE: INTERSTITIAL FLUID" ;
+    cfa:inCodelist cl:C78734 ;
+    cfa:submissionValue "INTERSTITIAL FLUID" ;
+    cfa:term ncit:C120839 .
+
+clm:C78734-C12434 a cfa:CodelistMembership ;
+    rdfs:label "SPECTYPE: BLOOD" ;
+    cfa:inCodelist cl:C78734 ;
+    cfa:submissionValue "BLOOD" ;
+    cfa:term ncit:C12434 .
+
+clm:C78734-C13283 a cfa:CodelistMembership ;
+    rdfs:label "SPECTYPE: URINE" ;
+    cfa:inCodelist cl:C78734 ;
+    cfa:submissionValue "URINE" ;
+    cfa:term ncit:C13283 .
+
+clm:C78734-C13325 a cfa:CodelistMembership ;
+    rdfs:label "SPECTYPE: SERUM" ;
+    cfa:inCodelist cl:C78734 ;
+    cfa:submissionValue "SERUM" ;
+    cfa:term ncit:C13325 .
+
+clm:C78734-C13356 a cfa:CodelistMembership ;
+    rdfs:label "SPECTYPE: PLASMA" ;
+    cfa:inCodelist cl:C78734 ;
+    cfa:submissionValue "PLASMA" ;
+    cfa:term ncit:C13356 .
+
+clm:C85492-C50322 a cfa:CodelistMembership ;
+    rdfs:label "METHOD: TEST STRIP" ;
+    cfa:inCodelist cl:C85492 ;
+    cfa:submissionValue "TEST STRIP" ;
+    cfa:term ncit:C50322 .
+
+var:LBANMETH a cfa:Variable ;
+    skos:notation "LBANMETH" ;
+    cfa:facetKind cfa:ObservableFacet ;
+    cfa:facetPosition cfa:OpenPosition ;
+    cfa:inDomain dom:LB ;
+    cfa:positionBasis "standards silent, open" ;
+    cfa:positionBasisNote "Domain_Variables in SDTM_Variables: SDTMIG v3.4 Record Qualifier, Perm, codelist LBANMET (C160922, Laboratory Analytical Method Calculation Formula); COSMoS does not use LBANMETH. SDTMIG v3.4 CDISC Notes: 'Analysis method applied to obtain a summarized result. Analysis method describes the method of secondary processing applied to a complex observation result (e.g., a calculation used to measure eGFR).' SDTMIG v3.4 LB Assumption 8: LBANMETH is among 'the aspects of a test that are associated with a LOINC code', 'only required to be populated when necessary to provide a semantically meaningful distinction between records with different LBLOINC values'. SDTM CT puts the eGFR formulas (CKD-EPI, MDRD, Cockcroft-Gault) in LBANMET, not in the test code (the counter-case in Folded_Facets, Codelist_Phrases). No source says whether the calculation method is part of the observable. Quoted in SDTMIG_Statements.xlsx: LB-A8. Kind: observable — a calculation method is a facet (docs/Observables_Direction.md); whether it changes the observable stays open." ;
+    cfa:positionStatus "proposed" .
+
+var:LBBDAGNT a cfa:Variable ;
+    skos:notation "LBBDAGNT" ;
+    cfa:facetKind cfa:ObservableFacet ;
+    cfa:facetPosition cfa:Component ;
+    cfa:inDomain dom:LB ;
+    cfa:positionBasis "sources agree" ;
+    cfa:positionBasisNote "Domain_Variables in SDTM_Variables: SDTMIG v3.4 Variable Qualifier, Perm, no codelist in the IG table; COSMoS does not use LBBDAGNT (147 LB DSSs). SDTM v2.0: Variable Qualifier of --TESTCD (usage: CP, IS, and LB domains only). SDTMIG v3.4 CDISC Notes: 'The textual description of the agent that is binding to the entity in the LBTEST variable. The LBBDAGNT variable is used to indicate that there is a binding relationship between the entities in the LBTEST and LBBDAGNT variables, regardless of direction. LBBDAGNT is not a method qualifier. It should only be used when the actual interest of the measurement is the binding interaction between the 2 entities in LBTEST and LBBDAGNT. In other words, the combination of LBTEST and LBBDAGNT should describe the thing, the entity, or the analyte being measured, without the need for additional variables. The binding agent may be (but is not limited to) a test article, a portion of the test article, a related compound, or an endogenous molecule.' SDTMIG v3.4 LB Assumption 8: LBBDAGNT is among 'the aspects of a test that are associated with a LOINC code', 'only required to be populated when necessary to provide a semantically meaningful distinction between records with different LBLOINC values'. The IG and Model notes say LBTEST with LBBDAGNT describes the analyte; one source states it, none contradicts. The same reading as ISBDAGNT, where COSMoS agrees. Quoted in SDTMIG_Statements.xlsx: LB-A8, LBBDAGNT-Notes. Kind: observable — follows from the position." ;
+    cfa:positionStatus "proposed" .
+
+var:LBCOLSRT a cfa:Variable ;
+    skos:notation "LBCOLSRT" ;
+    cfa:facetKind cfa:OpenFacet ;
+    cfa:facetPosition cfa:OpenPosition ;
+    cfa:inDomain dom:LB ;
+    cfa:positionBasis "standards silent, open" ;
+    cfa:positionBasisNote "Domain_Variables in SDTM_Variables: SDTMIG v3.4 Record Qualifier, Perm, codelist COLSTYP (C177908); COSMoS does not use LBCOLSRT (147 LB DSSs). SDTM v2.0: Variable Qualifier of --TESTCD; the SDTMIG v3.4 role (Record Qualifier) differs from the Model. SDTMIG v3.4 CDISC Notes: 'Used to indicate the type of collected summary result. This includes source summary results collected on a CRF or provided by an external vendor (e.g., central lab). If the summary result is derived by the sponsor using individual source data records from SDTM, the derived summary result is represented in ADaM. If the summary result is produced and reported by the lab, the collected summary result is represented in SDTM.' SDTMIG v3.4 LB Assumption 8: LBCOLSRT is among 'the aspects of a test that are associated with a LOINC code', 'only required to be populated when necessary to provide a semantically meaningful distinction between records with different LBLOINC values'. No source says whether this variable is part of the observable. Quoted in SDTMIG_Statements.xlsx: LB-A8. Kind: open — the Model ties the summary type to the test (observable); summarising several results is analysis, which is not a facet (docs/Observables_Direction.md)." ;
+    cfa:positionStatus "proposed" .
+
+var:LBLLOD a cfa:Variable ;
+    skos:notation "LBLLOD" ;
+    cfa:facetKind cfa:OpenFacet ;
+    cfa:facetPosition cfa:OpenPosition ;
+    cfa:inDomain dom:LB ;
+    cfa:positionBasis "standards silent, open" ;
+    cfa:positionBasisNote "Domain_Variables in SDTM_Variables: SDTMIG v3.4 Variable Qualifier, Perm, no codelist in the IG table; COSMoS does not use LBLLOD (147 LB DSSs). SDTM v2.0: Variable Qualifier of --TESTCD. SDTMIG v3.4 CDISC Notes: 'The lowest threshold (as originally received or collected) for reliably detecting the presence or absence of substance measured by a specific test. The value for the field will be as described in documentation from the instrument or lab vendor.' SDTMIG v3.4 LB Assumption 8: LBLLOD is among 'the aspects of a test that are associated with a LOINC code', 'only required to be populated when necessary to provide a semantically meaningful distinction between records with different LBLOINC values'. No source says whether this variable is part of the observable. Quoted in SDTMIG_Statements.xlsx: LB-A8. Kind: open — a detection limit may separate tests (observable), or only describe the assay used, as received from the vendor (record)." ;
+    cfa:positionStatus "proposed" .
+
+var:LBPDUR a cfa:Variable ;
+    skos:notation "LBPDUR" ;
+    cfa:facetKind cfa:OpenFacet ;
+    cfa:facetPosition cfa:OpenPosition ;
+    cfa:inDomain dom:LB ;
+    cfa:positionBasis "standards silent, open" ;
+    cfa:positionBasisNote "Domain_Variables in SDTM_Variables: SDTMIG v3.4 Timing, Perm, no codelist in the IG table; COSMoS does not use LBPDUR (147 LB DSSs). SDTM v2.0: Timing (usage: Only in Findings class specimen-based domains: BS, CP, GF, IS, LB, MB, MS, MI, PC, PP). SDTMIG v3.4 CDISC Notes: 'Planned duration of specimen collection. If LBPTFL is \"Y\" then LBPDUR is null.' SDTMIG v3.4 LB Assumption 8: LBPDUR is among 'the aspects of a test that are associated with a LOINC code', 'only required to be populated when necessary to provide a semantically meaningful distinction between records with different LBLOINC values'. No source says whether this variable is part of the observable. Quoted in SDTMIG_Statements.xlsx: LB-A8. Kind: open — as LBPTFL: how the specimen is collected (practice), or the time aspect of the observable (observable)." ;
+    cfa:positionStatus "proposed" .
+
+var:LBPTFL a cfa:Variable ;
+    skos:notation "LBPTFL" ;
+    cfa:facetKind cfa:OpenFacet ;
+    cfa:facetPosition cfa:OpenPosition ;
+    cfa:inDomain dom:LB ;
+    cfa:positionBasis "standards silent, open" ;
+    cfa:positionBasisNote "Domain_Variables in SDTM_Variables: SDTMIG v3.4 Timing, Perm, codelist NY (C66742); COSMoS does not use LBPTFL (147 LB DSSs). SDTM v2.0: Timing (usage: Only in Findings class specimen-based domains: BS, CP, GF, IS, LB, MB, MS, MI, PC, PP). SDTMIG v3.4 CDISC Notes: 'An indication that the specimen was collected at a single point in time. The value is \"Y\" or null. The intent of this variable in the LB domain is to aid mapping to LOINC codes in the dataset, when LOINC part \"Time Aspect\" = \"Pt\".' SDTMIG v3.4 LB Assumption 8: LBPTFL is among 'the aspects of a test that are associated with a LOINC code', 'only required to be populated when necessary to provide a semantically meaningful distinction between records with different LBLOINC values'. No source says whether this variable is part of the observable. Quoted in SDTMIG_Statements.xlsx: LB-A8. Kind: open — how the specimen is collected (practice), or the time aspect, a part of the LOINC code the IG note names (observable)." ;
+    cfa:positionStatus "proposed" .
+
+var:LBRESSCL a cfa:Variable ;
+    skos:notation "LBRESSCL" ;
+    cfa:facetKind cfa:ObservableFacet ;
+    cfa:facetPosition cfa:Scale ;
+    cfa:inDomain dom:LB ;
+    cfa:positionBasis "sources disagree, decided by a stated rule" ;
+    cfa:positionBasisNote "Domain_Variables in SDTM_Variables: SDTMIG v3.4 Record Qualifier, Perm, codelist RSLSCLRS (C177910); COSMoS does not use LBRESSCL (147 LB DSSs). SDTM v2.0: Record Qualifier. SDTMIG v3.4 CDISC Notes: 'Classifies the scale of the original result value; for example, whether the result is ordinal, nominal, quantitative, or narrative.' SDTMIG v3.4 LB Assumption 8: LBRESSCL is among 'the aspects of a test that are associated with a LOINC code', 'only required to be populated when necessary to provide a semantically meaningful distinction between records with different LBLOINC values'. COSMoS publishes result scale per BC, not as a DSS variable (Scale_Units in Domain_Behaviour). Rule (decided 2026-10-06, the scale row of this sheet): result scale is treated as distinguishing an observable, on the standards' own grounds; LBRESSCL is the LB variable that carries it. Basis as the scale row. Quoted in SDTMIG_Statements.xlsx: LB-A8, LBRESSCL-Notes. Kind: observable — follows from the position." ;
+    cfa:positionStatus "proposed" .
+
+var:LBRESTYP a cfa:Variable ;
+    skos:notation "LBRESTYP" ;
+    cfa:facetKind cfa:ObservableFacet ;
+    cfa:facetPosition cfa:OpenPosition ;
+    cfa:inDomain dom:LB ;
+    cfa:positionBasis "standards silent, open" ;
+    cfa:positionBasisNote "Domain_Variables in SDTM_Variables: SDTMIG v3.4 Record Qualifier, Perm, codelist RESTYPRS (C179588); COSMoS does not use LBRESTYP (147 LB DSSs). SDTM v2.0: Record Qualifier. SDTMIG v3.4 CDISC Notes: 'Classifies the kind of result (i.e., property type) originally reported for the test. Examples include substance concentration, proportion, mass rate, and arbitrary concentration.' SDTMIG v3.4 LB Assumption 8: LBRESTYP is among 'the aspects of a test that are associated with a LOINC code', 'only required to be populated when necessary to provide a semantically meaningful distinction between records with different LBLOINC values'. No source says whether the property type is part of the observable; the key has no property part. Quoted in SDTMIG_Statements.xlsx: LB-A8. Kind: observable — the kind of quantity determined (a property, in LOINC's terms); whether it changes the observable stays open." ;
+    cfa:positionStatus "proposed" .
+
+var:LBTESTCD a cfa:Variable ;
+    skos:notation "LBTESTCD" ;
+    cfa:facetKind cfa:ObservableFacet ;
+    cfa:facetPosition cfa:Component ;
+    cfa:inDomain dom:LB ;
+    cfa:positionBasis "sources disagree, decided by a stated rule" ;
+    cfa:positionBasisNote "COSMoS puts GLUC and GLUCPE under one BC (C105585). SDTM CT publishes them as separate LBTESTCD terms with their own NCIt codes and definitions (GLUC C105585; GLUCPE C163446, \"plasma equivalent glucose\"). The key separates them; the fan-out does not. Rule (adopted 2026-10-08): a separate SDTM CT test term with its own NCIt code is a separate component (identity keyed on NCIt codes, Observables_Direction step 2). SDTM v2.0 and SDTMIG v3.4: Topic. Kind: observable — follows from the position." ;
+    cfa:positionStatus "accepted" .
+
+var:LBTPT a cfa:Variable ;
+    skos:notation "LBTPT" ;
+    cfa:facetKind cfa:PracticeFacet ;
+    cfa:facetPosition cfa:OpenPosition ;
+    cfa:inDomain dom:LB ;
+    cfa:positionBasis "standards silent, open" ;
+    cfa:positionBasisNote "Domain_Variables in SDTM_Variables: SDTMIG v3.4 Timing, Perm, no codelist in the IG table; COSMoS does not use LBTPT (147 LB DSSs). SDTM v2.0: Timing; NCIt concept of --TPT: Study Data Tabulation Planned Time Point Name. SDTMIG v3.4 CDISC Notes: 'Text description of time when specimen should be taken. This may be represented as an elapsed time relative to a fixed reference point, such as time of last dose. See LBTPTNUM and LBTPTREF. Examples: \"Start\", \"5 min post\".' SDTMIG v3.4 LB Assumption 8: LBTPT is among 'the aspects of a test that are associated with a LOINC code', 'only required to be populated when necessary to provide a semantically meaningful distinction between records with different LBLOINC values'. No source says whether this variable is part of the observable. Quoted in SDTMIG_Statements.xlsx: LB-A8. Kind: practice — the planned time of the observation, set by the study design (as EGTPT)." ;
+    cfa:positionStatus "proposed" .
+
+var:LBTSTCND a cfa:Variable ;
+    skos:notation "LBTSTCND" ;
+    cfa:facetKind cfa:ObservableFacet ;
+    cfa:facetPosition cfa:OpenPosition ;
+    cfa:inDomain dom:LB ;
+    cfa:positionBasis "standards silent, open" ;
+    cfa:positionBasisNote "Domain_Variables in SDTM_Variables: SDTMIG v3.4 Variable Qualifier, Perm, codelist TESTCOND (C181175); COSMoS does not use LBTSTCND (147 LB DSSs). SDTM v2.0: Variable Qualifier of --TESTCD (usage: CP, IS, and LB domains only). SDTMIG v3.4 CDISC Notes: 'Identifies any planned condition imposed by the assay system on the specimen at the time the test is performed.' SDTMIG v3.4 LB Assumption 8: LBTSTCND is among 'the aspects of a test that are associated with a LOINC code', 'only required to be populated when necessary to provide a semantically meaningful distinction between records with different LBLOINC values'. No source says whether this variable is part of the observable. Quoted in SDTMIG_Statements.xlsx: LB-A8, LBTSTCND-Notes. Kind: observable — a condition the assay imposes on the specimen, qualifying the test as --METHOD does; not a condition on the subject (unlike --FAST, --POS). Whether it changes the observable stays open." ;
+    cfa:positionStatus "proposed" .
+
+var:LBTSTOPO a cfa:Variable ;
+    skos:notation "LBTSTOPO" ;
+    cfa:facetKind cfa:OpenFacet ;
+    cfa:facetPosition cfa:OpenPosition ;
+    cfa:inDomain dom:LB ;
+    cfa:positionBasis "standards silent, open" ;
+    cfa:positionBasisNote "Domain_Variables in SDTM_Variables: SDTMIG v3.4 Variable Qualifier, Perm, codelist TSTOPOBJ (C181170); COSMoS does not use LBTSTOPO (147 LB DSSs). SDTM v2.0: Variable Qualifier of --TESTCD. SDTMIG v3.4 CDISC Notes: 'Text description of the high-level purpose of the test at the operational level.' SDTMIG v3.4 LB Assumption 8: LBTSTOPO is among 'the aspects of a test that are associated with a LOINC code', 'only required to be populated when necessary to provide a semantically meaningful distinction between records with different LBLOINC values'. Two readings, as for ISTSTOPO (COSMoS value list in IS): the tier is part of the observable, or it is the operational step that produces it. No source says which. Quoted in SDTMIG_Statements.xlsx: LB-A8, LBTSTOPO-Notes. Kind: open — as the position: part of the observable, or the step that produces it (practice)." ;
+    cfa:positionStatus "proposed" .
+
+ncit:C49237 skos:prefLabel "Chemistry Test" .
+
+loinc:2349-9 rdfs:label "LOINC 2349-9" .
+
+loinc:25428-4 rdfs:label "LOINC 25428-4" .
+
+obs:C105585-C105585-C12434-UNITS-UNPINNED a cfa:Observable ;
+    rdfs:label "observable GLUC · BLOOD · UNITS · UNPINNED" ;
+    skos:notation "C105585|GLUC|BLOOD|UNITS|UNPINNED" ;
+    cfa:component ncit:C105585 ;
+    cfa:leavesOpen cfa:Method ;
+    cfa:scale cfa:WithUnits ;
+    cfa:system ncit:C12434 ;
+    cfa:viaBiomedicalConcept bc:C105585 .
+
+obs:C105585-C105585-C13283-NO_UNITS-C50322 a cfa:Observable ;
+    rdfs:label "observable GLUC · URINE · NO_UNITS · TEST STRIP" ;
+    skos:notation "C105585|GLUC|URINE|NO_UNITS|TEST STRIP" ;
+    cfa:component ncit:C105585 ;
+    cfa:method ncit:C50322 ;
+    cfa:scale cfa:WithoutUnits ;
+    cfa:system ncit:C13283 ;
+    cfa:viaBiomedicalConcept bc:C105585 .
+
+obs:C105585-C105585-C13283-NO_UNITS-UNPINNED a cfa:Observable ;
+    rdfs:label "observable GLUC · URINE · NO_UNITS · UNPINNED" ;
+    skos:notation "C105585|GLUC|URINE|NO_UNITS|UNPINNED" ;
+    cfa:component ncit:C105585 ;
+    cfa:leavesOpen cfa:Method ;
+    cfa:scale cfa:WithoutUnits ;
+    cfa:system ncit:C13283 ;
+    cfa:viaBiomedicalConcept bc:C105585 .
+
+obs:C105585-C105585-C13283-UNITS-UNPINNED a cfa:Observable ;
+    rdfs:label "observable GLUC · URINE · UNITS · UNPINNED" ;
+    skos:notation "C105585|GLUC|URINE|UNITS|UNPINNED" ;
+    cfa:component ncit:C105585 ;
+    cfa:leavesOpen cfa:Method ;
+    cfa:scale cfa:WithUnits ;
+    cfa:system ncit:C13283 ;
+    cfa:viaBiomedicalConcept bc:C105585 .
+
+obs:C105585-C105585-C13356-UNITS-UNPINNED a cfa:Observable ;
+    rdfs:label "observable GLUC · PLASMA · UNITS · UNPINNED" ;
+    skos:notation "C105585|GLUC|PLASMA|UNITS|UNPINNED" ;
+    cfa:component ncit:C105585 ;
+    cfa:leavesOpen cfa:Method ;
+    cfa:scale cfa:WithUnits ;
+    cfa:system ncit:C13356 ;
+    cfa:viaBiomedicalConcept bc:C105585 .
+
+obs:C105585-C163446-C120839-UNITS-UNPINNED a cfa:Observable ;
+    rdfs:label "observable GLUCPE · INTERSTITIAL FLUID · UNITS · UNPINNED" ;
+    skos:notation "C105585|GLUCPE|INTERSTITIAL FLUID|UNITS|UNPINNED" ;
+    cfa:component ncit:C163446 ;
+    cfa:leavesOpen cfa:Method ;
+    cfa:scale cfa:WithUnits ;
+    cfa:system ncit:C120839 ;
+    cfa:viaBiomedicalConcept bc:C105585 .
+
+tc:LB-GLUCPE a cfa:TestCode ;
+    rdfs:label "Plasma Equivalent Glucose" ;
+    skos:notation "GLUCPE" ;
+    prov:wasDerivedFrom src:SDTM_Test_Identity ;
+    cfa:inDomain dom:LB ;
+    cfa:isIdentifiedBy ncit:C163446 .
+
+var:LBMETHOD a cfa:Variable ;
+    skos:notation "LBMETHOD" ;
+    cfa:facetKind cfa:ObservableFacet ;
+    cfa:facetPosition cfa:Method ;
+    cfa:inDomain dom:LB ;
+    cfa:positionBasis "sources agree" ;
+    cfa:positionBasisNote "COSMoS: predicate SPECIFIES, \"is the method for the test in\", DEC Test Method, codelist METHOD. Fan-out axis method and key part method agree (Key_Compare in Domain_Behaviour). LOINC method agrees where COSMoS separates by method (LOINC_Compare in Domain_Behaviour). SDTM v2.0 and SDTMIG v3.4: Record Qualifier, the same role as --POS and --FAST; the role does not separate them. SDTMIG v3.4 LB Assumption 8: with LBTEST and LBORRESU, 'the aspects of a test that are associated with a LOINC code'. Quoted in SDTMIG_Statements.xlsx: LB-A8. Kind: observable — follows from the position." ;
+    cfa:positionStatus "accepted" .
+
+vs:LB-GLUCBLD-LBCAT a cfa:VariableSpecialization ;
+    rdfs:label "LBCAT in GLUCBLD" ;
+    cfa:pinnedLiteral "CHEMISTRY" ;
+    cfa:variable var:LBCAT .
+
+vs:LB-GLUCBLD-LBFAST a cfa:VariableSpecialization ;
+    rdfs:label "LBFAST in GLUCBLD" ;
+    cfa:drawsFrom cl:C66742 ;
+    cfa:permittedValue ncit:C49487,
+        ncit:C49488 ;
+    cfa:variable var:LBFAST .
+
+vs:LB-GLUCBLD-LBORRESU a cfa:VariableSpecialization ;
+    rdfs:label "LBORRESU in GLUCBLD" ;
+    cfa:drawsFrom cl:C71620 ;
+    cfa:permittedValue ncit:C64387,
+        ncit:C67015 ;
+    cfa:variable var:LBORRESU .
+
+vs:LB-GLUCBLD-LBSPEC a cfa:VariableSpecialization ;
+    rdfs:label "LBSPEC in GLUCBLD" ;
+    cfa:drawsFrom cl:C78734 ;
+    cfa:pinnedValue ncit:C12434 ;
+    cfa:variable var:LBSPEC .
+
+vs:LB-GLUCBLD-LBSTRESU a cfa:VariableSpecialization ;
+    rdfs:label "LBSTRESU in GLUCBLD" ;
+    cfa:drawsFrom cl:C71620 ;
+    cfa:pinnedValue ncit:C64387 ;
+    cfa:variable var:LBSTRESU .
+
+vs:LB-GLUCPE-LBCAT a cfa:VariableSpecialization ;
+    rdfs:label "LBCAT in GLUCPE" ;
+    cfa:pinnedLiteral "CHEMISTRY" ;
+    cfa:variable var:LBCAT .
+
+vs:LB-GLUCPE-LBFAST a cfa:VariableSpecialization ;
+    rdfs:label "LBFAST in GLUCPE" ;
+    cfa:drawsFrom cl:C66742 ;
+    cfa:permittedValue ncit:C49487,
+        ncit:C49488 ;
+    cfa:variable var:LBFAST .
+
+vs:LB-GLUCPE-LBORRESU a cfa:VariableSpecialization ;
+    rdfs:label "LBORRESU in GLUCPE" ;
+    cfa:drawsFrom cl:C71620 ;
+    cfa:permittedValue ncit:C42576,
+        ncit:C64387,
+        ncit:C67015 ;
+    cfa:variable var:LBORRESU .
+
+vs:LB-GLUCPE-LBSPEC a cfa:VariableSpecialization ;
+    rdfs:label "LBSPEC in GLUCPE" ;
+    cfa:drawsFrom cl:C78734 ;
+    cfa:pinnedValue ncit:C120839 ;
+    cfa:variable var:LBSPEC .
+
+vs:LB-GLUCPE-LBSTRESU a cfa:VariableSpecialization ;
+    rdfs:label "LBSTRESU in GLUCPE" ;
+    cfa:drawsFrom cl:C71620 ;
+    cfa:pinnedValue ncit:C64387 ;
+    cfa:variable var:LBSTRESU .
+
+vs:LB-GLUCPL-LBCAT a cfa:VariableSpecialization ;
+    rdfs:label "LBCAT in GLUCPL" ;
+    cfa:pinnedLiteral "CHEMISTRY" ;
+    cfa:variable var:LBCAT .
+
+vs:LB-GLUCPL-LBFAST a cfa:VariableSpecialization ;
+    rdfs:label "LBFAST in GLUCPL" ;
+    cfa:drawsFrom cl:C66742 ;
+    cfa:permittedValue ncit:C49487,
+        ncit:C49488 ;
+    cfa:variable var:LBFAST .
+
+vs:LB-GLUCPL-LBORRESU a cfa:VariableSpecialization ;
+    rdfs:label "LBORRESU in GLUCPL" ;
+    cfa:drawsFrom cl:C71620 ;
+    cfa:permittedValue ncit:C42576,
+        ncit:C64387,
+        ncit:C67015 ;
+    cfa:variable var:LBORRESU .
+
+vs:LB-GLUCPL-LBSPEC a cfa:VariableSpecialization ;
+    rdfs:label "LBSPEC in GLUCPL" ;
+    cfa:drawsFrom cl:C78734 ;
+    cfa:pinnedValue ncit:C13356 ;
+    cfa:variable var:LBSPEC .
+
+vs:LB-GLUCPL-LBSTRESU a cfa:VariableSpecialization ;
+    rdfs:label "LBSTRESU in GLUCPL" ;
+    cfa:drawsFrom cl:C71620 ;
+    cfa:pinnedValue ncit:C64387 ;
+    cfa:variable var:LBSTRESU .
+
+vs:LB-GLUCSER-LBCAT a cfa:VariableSpecialization ;
+    rdfs:label "LBCAT in GLUCSER" ;
+    cfa:pinnedLiteral "CHEMISTRY" ;
+    cfa:variable var:LBCAT .
+
+vs:LB-GLUCSER-LBFAST a cfa:VariableSpecialization ;
+    rdfs:label "LBFAST in GLUCSER" ;
+    cfa:drawsFrom cl:C66742 ;
+    cfa:permittedValue ncit:C49487,
+        ncit:C49488 ;
+    cfa:variable var:LBFAST .
+
+vs:LB-GLUCSER-LBORRESU a cfa:VariableSpecialization ;
+    rdfs:label "LBORRESU in GLUCSER" ;
+    cfa:drawsFrom cl:C71620 ;
+    cfa:permittedValue ncit:C42576,
+        ncit:C64387,
+        ncit:C67015 ;
+    cfa:variable var:LBORRESU .
+
+vs:LB-GLUCSER-LBSPEC a cfa:VariableSpecialization ;
+    rdfs:label "LBSPEC in GLUCSER" ;
+    cfa:drawsFrom cl:C78734 ;
+    cfa:pinnedValue ncit:C13325 ;
+    cfa:variable var:LBSPEC .
+
+vs:LB-GLUCSER-LBSTRESU a cfa:VariableSpecialization ;
+    rdfs:label "LBSTRESU in GLUCSER" ;
+    cfa:drawsFrom cl:C71620 ;
+    cfa:pinnedValue ncit:C64387 ;
+    cfa:variable var:LBSTRESU .
+
+vs:LB-GLUCSERPL-LBCAT a cfa:VariableSpecialization ;
+    rdfs:label "LBCAT in GLUCSERPL" ;
+    cfa:pinnedLiteral "CHEMISTRY" ;
+    cfa:variable var:LBCAT .
+
+vs:LB-GLUCSERPL-LBFAST a cfa:VariableSpecialization ;
+    rdfs:label "LBFAST in GLUCSERPL" ;
+    cfa:drawsFrom cl:C66742 ;
+    cfa:permittedValue ncit:C49487,
+        ncit:C49488 ;
+    cfa:variable var:LBFAST .
+
+vs:LB-GLUCSERPL-LBORRESU a cfa:VariableSpecialization ;
+    rdfs:label "LBORRESU in GLUCSERPL" ;
+    cfa:drawsFrom cl:C71620 ;
+    cfa:permittedValue ncit:C42576,
+        ncit:C64387,
+        ncit:C67015 ;
+    cfa:variable var:LBORRESU .
+
+vs:LB-GLUCSERPL-LBSPEC a cfa:VariableSpecialization ;
+    rdfs:label "LBSPEC in GLUCSERPL" ;
+    cfa:drawsFrom cl:C78734 ;
+    cfa:pinnedValue ncit:C13325 ;
+    cfa:variable var:LBSPEC .
+
+vs:LB-GLUCSERPL-LBSTRESU a cfa:VariableSpecialization ;
+    rdfs:label "LBSTRESU in GLUCSERPL" ;
+    cfa:drawsFrom cl:C71620 ;
+    cfa:pinnedValue ncit:C64387 ;
+    cfa:variable var:LBSTRESU .
+
+vs:LB-GLUCUA-LBCAT a cfa:VariableSpecialization ;
+    rdfs:label "LBCAT in GLUCUA" ;
+    cfa:pinnedLiteral "URINALYSIS" ;
+    cfa:variable var:LBCAT .
+
+vs:LB-GLUCUA-LBFAST a cfa:VariableSpecialization ;
+    rdfs:label "LBFAST in GLUCUA" ;
+    cfa:drawsFrom cl:C66742 ;
+    cfa:permittedValue ncit:C49487,
+        ncit:C49488 ;
+    cfa:variable var:LBFAST .
+
+vs:LB-GLUCUA-LBMETHOD a cfa:VariableSpecialization ;
+    rdfs:label "LBMETHOD in GLUCUA" ;
+    cfa:drawsFrom cl:C85492 ;
+    cfa:pinnedValue ncit:C50322 ;
+    cfa:variable var:LBMETHOD .
+
+vs:LB-GLUCUA-LBSPEC a cfa:VariableSpecialization ;
+    rdfs:label "LBSPEC in GLUCUA" ;
+    cfa:drawsFrom cl:C78734 ;
+    cfa:pinnedValue ncit:C13283 ;
+    cfa:variable var:LBSPEC .
+
+vs:LB-GLUCURIN-LBCAT a cfa:VariableSpecialization ;
+    rdfs:label "LBCAT in GLUCURIN" ;
+    cfa:pinnedLiteral "CHEMISTRY" ;
+    cfa:variable var:LBCAT .
+
+vs:LB-GLUCURIN-LBFAST a cfa:VariableSpecialization ;
+    rdfs:label "LBFAST in GLUCURIN" ;
+    cfa:drawsFrom cl:C66742 ;
+    cfa:permittedValue ncit:C49487,
+        ncit:C49488 ;
+    cfa:variable var:LBFAST .
+
+vs:LB-GLUCURIN-LBORRESU a cfa:VariableSpecialization ;
+    rdfs:label "LBORRESU in GLUCURIN" ;
+    cfa:drawsFrom cl:C71620 ;
+    cfa:permittedValue ncit:C48508,
+        ncit:C64387,
+        ncit:C67015 ;
+    cfa:variable var:LBORRESU .
+
+vs:LB-GLUCURIN-LBSPEC a cfa:VariableSpecialization ;
+    rdfs:label "LBSPEC in GLUCURIN" ;
+    cfa:drawsFrom cl:C78734 ;
+    cfa:pinnedValue ncit:C13283 ;
+    cfa:variable var:LBSPEC .
+
+vs:LB-GLUCURIN-LBSTRESU a cfa:VariableSpecialization ;
+    rdfs:label "LBSTRESU in GLUCURIN" ;
+    cfa:drawsFrom cl:C71620 ;
+    cfa:pinnedValue ncit:C64387 ;
+    cfa:variable var:LBSTRESU .
+
+vs:LB-GLUCURINPRES-LBCAT a cfa:VariableSpecialization ;
+    rdfs:label "LBCAT in GLUCURINPRES" ;
+    cfa:pinnedLiteral "URINALYSIS" ;
+    cfa:variable var:LBCAT .
+
+vs:LB-GLUCURINPRES-LBFAST a cfa:VariableSpecialization ;
+    rdfs:label "LBFAST in GLUCURINPRES" ;
+    cfa:drawsFrom cl:C66742 ;
+    cfa:permittedValue ncit:C49487,
+        ncit:C49488 ;
+    cfa:variable var:LBFAST .
+
+vs:LB-GLUCURINPRES-LBSPEC a cfa:VariableSpecialization ;
+    rdfs:label "LBSPEC in GLUCURINPRES" ;
+    cfa:drawsFrom cl:C78734 ;
+    cfa:pinnedValue ncit:C13283 ;
+    cfa:variable var:LBSPEC .
+
+ncit:C163446 skos:altLabel "GLUCPE",
+        "Plasma Equivalent Glucose",
+        "Plasma-Equivalent Glucose Measurement" ;
+    skos:definition "The determination of the amount of plasma equivalent glucose present in a sample." ;
+    skos:prefLabel "Plasma Equivalent Glucose Measurement" .
+
+ncit:C48508 skos:altLabel "Attomole per Picoliter",
+        "Femtomole per Nanoliter",
+        "MICROMOLAR",
+        "Nanomole per Milliliter",
+        "Picomole per Microliter",
+        "Zeptomole per Femtoliter",
+        "amol/pL",
+        "fmol/nL",
+        "mcmol/L",
+        "micromole(s)/litre",
+        "nanomole(s)/millilitre",
+        "nanomoles per milliliter",
+        "pmol/uL",
+        "zmol/fL" ;
+    skos:definition "A unit of concentration (molarity unit) equal to one micromole of solute per liter of solution." ;
+    skos:prefLabel "Micromole per Liter" .
+
+cl:C85492 a cfa:Codelist ;
+    rdfs:label "Method" ;
+    skos:notation "METHOD" ;
+    cfa:extensible true ;
+    cfa:isIdentifiedBy ncit:C85492 .
+
+obs:C105585-C105585-C13325-UNITS-UNPINNED a cfa:Observable ;
+    rdfs:label "observable GLUC · SERUM · UNITS · UNPINNED" ;
+    skos:notation "C105585|GLUC|SERUM|UNITS|UNPINNED" ;
+    cfa:component ncit:C105585 ;
+    cfa:leavesOpen cfa:Method ;
+    cfa:scale cfa:WithUnits ;
+    cfa:system ncit:C13325 ;
+    cfa:viaBiomedicalConcept bc:C105585 .
+
+src:SDTM_Test_Identity a cfa:SourceFile ;
+    rdfs:label "SDTM_Test_Identity.xlsx" ;
+    dct:source "sdtm-test-codes/machine_actionable/SDTM_Test_Identity.xlsx" ;
+    prov:generatedAtTime "2026-10-30 12:04" ;
+    cfa:contentSha256 "Test Codes 94e1d5cd6df312a8dceb4a30bb03fc8ca17e728572e2c0d2f245dd9e6a6a442f" ;
+    cfa:sourceVersion "COSMoS 2026-07-14",
+        "NCIt 2026-09-29",
+        "SDTM 2.0",
+        "SDTMIG 3.4",
+        "SDTM_CT 2026-09-25" .
+
+ncit:C120839 skos:definition "The extracellular fluid component found in the spaces between tissues. This excludes plasma and transcellular fluid." ;
+    skos:prefLabel "Interstitial Fluid" .
+
+ncit:C12434 skos:altLabel "Reticuloendothelial System, Blood",
+        "portion of blood",
+        "vertebrate blood" ;
+    skos:definition "A liquid tissue with the primary function of transporting oxygen and carbon dioxide. It supplies the tissues with nutrients, removes waste products, and contains various components of the immune system defending the body against infection." ;
+    skos:prefLabel "Blood" .
+
+ncit:C13356 skos:definition "The fluid (acellular) portion of the circulating blood with retained clotting components." ;
+    skos:prefLabel "Plasma" .
+
+ncit:C50322 skos:definition "A piece of chemically treated medium designed to react in the presence of specific amounts of a trigger substance." ;
+    skos:prefLabel "Test Strip Device" .
+
+ncit:C13325 skos:definition "The clear portion of the blood that remains after the removal of the blood cells and the clotting proteins. (NCI)" ;
+    skos:prefLabel "Serum" .
+
+ncit:C42576 skos:altLabel "Gram per Cubic Decimeter",
+        "Kilogram/Cubic Meter",
+        "g/dm3",
+        "gram(s)/litre",
+        "kilogram / (meter ^ 3)",
+        "kilogram per meter cubed",
+        "kilogram(s)/cubic meter",
+        "microgram(s)/microlitre",
+        "milligram(s)/millilitre" ;
+    skos:definition "A unit of concentration or mass density equal to one milligram of substance per milliliter of solution or one gram of substance per liter of solution." ;
+    skos:prefLabel "Kilogram per Cubic Meter" .
+
+var:LBORRESU a cfa:Variable ;
+    skos:notation "LBORRESU" ;
+    cfa:facetKind cfa:OpenFacet ;
+    cfa:facetPosition cfa:OpenPosition ;
+    cfa:inDomain dom:LB ;
+    cfa:positionBasis "standards silent, open" ;
+    cfa:positionBasisNote "Interpretation_Context in Domain_Behaviour: COSMoS has LBORRESU on 117 of 147 LB DSSs (assigned on 14, value list on 102, no value on 1; COSMoS_Use mixed); it never separates the DSSs of one BC (not in Variable_Evidence); codelist UNIT (C71620). SDTMIG v3.4 Variable Qualifier, Exp. SDTM v2.0: Variable Qualifier of --ORRES, --ORNRLO, --ORNRHI, --ORREF; NCIt concept of --ORRESU: Original Result Unit. SDTMIG v3.4 CDISC Notes: 'Original units in which the data were collected. The unit for LBORRES. Example: \"g/L\".' SDTMIG v3.4 LB Assumption 8: LBORRESU is among 'the aspects of a test that are associated with a LOINC code', 'only required to be populated when necessary to provide a semantically meaningful distinction between records with different LBLOINC values'. The Model ties the unit to the result, LB-A8 to the test. No source says whether this variable is part of the observable. Quoted in SDTMIG_Statements.xlsx: LB-A8. Kind: open — a planned unit names the property of the observable (docs/Observables_Direction.md); a reported unit is the form of the result. The key has no property part." ;
+    cfa:positionStatus "proposed" .
+
+var:LBSTRESU a cfa:Variable ;
+    skos:notation "LBSTRESU" ;
+    cfa:inDomain dom:LB .
+
+ncit:C13283 skos:altLabel "Urinary System, Urine" ;
+    skos:definition "The fluid produced by the kidneys." ;
+    skos:prefLabel "Urine" .
+
+ncit:C67015 skos:altLabel "Milligram/Deciliter",
+        "milligram per 100 milliliters of solution" ;
+    skos:definition "A unit of mass concentration defined as the concentration of one milligram of a substance in unit volume of the mixture equal to one cubic deciliter or 100 cubic centimeters. It is also a unit of mass density (volumic mass) defined as the density of substance which mass equal to one milligram occupies the volume one cubic deciliter or 100 cubic centimeters.(NCI)" ;
+    skos:prefLabel "Milligram per Deciliter" .
+
+tc:LB-GLUC a cfa:TestCode ;
+    rdfs:label "Glucose" ;
+    skos:notation "GLUC" ;
+    prov:wasDerivedFrom src:SDTM_Test_Identity ;
+    cfa:inDomain dom:LB ;
+    cfa:isIdentifiedBy ncit:C105585 .
+
+ncit:C105585 skos:altLabel "GLUC",
+        "Glucose" ;
+    skos:definition "The determination of the amount of glucose present in a sample." ;
+    skos:prefLabel "Glucose Measurement" ;
+    cfa:umlsCui "C0337438" .
+
+var:LBCAT a cfa:Variable ;
+    skos:notation "LBCAT" ;
+    cfa:facetKind cfa:RecordFacet ;
+    cfa:facetPosition cfa:OpenPosition ;
+    cfa:inDomain dom:LB ;
+    cfa:positionBasis "standards silent, open" ;
+    cfa:positionBasisNote "COSMoS: predicate GROUPS, \"groups values in\"; DEC not stated. No codelist; values without NCIt code. LBCAT and LOINC class are different groupings (LBCAT_LOINC_Class in Domain_Behaviour). No source says whether category changes the observation. SDTM v2.0 and SDTMIG v3.4: Grouping Qualifier. Kind: record — groups the records; carried, not keyed." ;
+    cfa:positionStatus "accepted" .
+
+var:LBFAST a cfa:Variable ;
+    skos:notation "LBFAST" ;
+    cfa:facetKind cfa:PracticeFacet ;
+    cfa:facetPosition cfa:OpenPosition ;
+    cfa:inDomain dom:LB ;
+    cfa:positionBasis "standards silent, open" ;
+    cfa:positionBasisNote "COSMoS: LBFAST is a value list (N;Y), never assigned, so it never separates sibling DSSs and is not in Variable_Evidence. LOINC (Subject_State in COSMoS_Observable_LOINC_Check): fasting-free and fasting-qualified glucose codes side by side (component Glucose^post CFst, class CHAL). LOINC offers fasting as a refinement, not as a requirement; no source says whether fasting is part of the observable. SDTM v2.0 and SDTMIG v3.4: Record Qualifier, like --SPEC and --METHOD; no published role separates subject state from identifying qualifiers. SDTMIG v3.4 LB Assumption 8: LBFAST is among 'the aspects of a test that are associated with a LOINC code', 'only required to be populated when necessary to provide a semantically meaningful distinction between records with different LBLOINC values'. COSMoS, LOINC and the IG agree that subject state is an optional refinement; none says it is always or never part of the observable (decided 2026-10-08: open, the conditional reading carried into Phase 2). Quoted in SDTMIG_Statements.xlsx: LB-A8. Kind: practice — fasting is a condition on the subject, set by how the observation is brought about (COSMoS and LOINC: subject state)." ;
+    cfa:positionStatus "accepted" .
+
+var:LBSPEC a cfa:Variable ;
+    skos:notation "LBSPEC" ;
+    cfa:facetKind cfa:ObservableFacet ;
+    cfa:facetPosition cfa:System ;
+    cfa:inDomain dom:LB ;
+    cfa:positionBasis "sources agree" ;
+    cfa:positionBasisNote "COSMoS: predicate IS_SPECIMEN_TESTED_IN, \"is the specimen tested in\", codelist SPECTYPE. Fan-out axis specimen and key part system agree (Key_Compare in Domain_Behaviour). LOINC system agrees (LOINC_Compare in Domain_Behaviour); the exceptions are COSMoS pin errors reported by COSMoS_Observable_LOINC_Check. SDTM v2.0 and SDTMIG v3.4: Record Qualifier, the same role as --POS and --FAST; the role does not separate them. SDTMIG v3.4 LB Assumption 8: with LBTEST and LBORRESU, 'the aspects of a test that are associated with a LOINC code'. Quoted in SDTMIG_Statements.xlsx: LB-A8. Kind: observable — follows from the position." ;
+    cfa:positionStatus "accepted" .
+
+ncit:C49487 skos:definition "The non-affirmative response to a question. (NCI)" ;
+    skos:prefLabel "No" .
+
+ncit:C49488 skos:definition "The affirmative response to a question. (NCI)" ;
+    skos:prefLabel "Yes" .
+
+src:Specimen_Findings a cfa:SourceFile ;
+    rdfs:label "Specimen_Findings.xlsx" ;
+    dct:source "sdtm-findings-graph/machine_actionable/Specimen_Findings.xlsx" ;
+    prov:generatedAtTime "2026-11-09 10:47" ;
+    cfa:contentSha256 "Axis_Meaning 0ea73f85a26efb0e13f2610bef52445fa775ce2f61542d8b4b191df46be9cef6",
+        "Codelists bf0ce4d63cc096f577089dc3149f181ad439b196fe85024411eeff451165a099",
+        "Domain_Variables 86d50704c16cc297b1c841fa781b7631085fa9f5e676d3e1590702597d208a8a",
+        "Measurement_Specs af89801202a7a07e16a703bdcd2ada74b7f33d80ad27765fc2706b80ecaa34a4",
+        "Shared_Strings a17faea38bcc0cabdc9922db075ee48e9deef07ae853608670d0cc3e5b859e72",
+        "Test_Identity 27441eb841370ef434f662a4d036860143565b107a1cf7a2d7e43261d299f498" ;
+    cfa:sourceVersion "COSMoS 2026-07-14",
+        "NCIt 2026-09-29",
+        "SDTM 2.0",
+        "SDTMIG 3.4",
+        "SDTM_CT 2026-09-25" .
+
+cl:C66742 a cfa:Codelist ;
+    rdfs:label "No Yes Response" ;
+    skos:notation "NY" ;
+    cfa:extensible false ;
+    cfa:isIdentifiedBy ncit:C66742 .
+
+ncit:C64387 skos:altLabel "Attomole per Femtoliter",
+        "Femtomole per Picoliter",
+        "Millimolar",
+        "Millimole/Liter",
+        "Nanomole per Microliter",
+        "Picomole per Nanoliter",
+        "Yoctomole per Zeptoliter",
+        "Zeptomole per Attoliter",
+        "amol/fL",
+        "fmol/pL",
+        "micromole(s)/millilitre",
+        "millimole(s)/litre",
+        "pmol/nL",
+        "ymol/zL",
+        "zmol/aL" ;
+    skos:definition "A unit of concentration (molarity unit) equal to one millimole of solute per liter of solution." ;
+    skos:prefLabel "Millimole per Liter" .
+
+cl:C78734 a cfa:Codelist ;
+    rdfs:label "Specimen Type" ;
+    skos:notation "SPECTYPE" ;
+    cfa:extensible true ;
+    cfa:isIdentifiedBy ncit:C78734 .
+
+bc:C105585 a cfa:BiomedicalConcept ;
+    rdfs:label "Glucose Measurement (COSMoS BC)" ;
+    skos:definition "The determination of the amount of glucose present in a sample." ;
+    prov:wasDerivedFrom src:Specimen_Findings ;
+    cfa:bcCategory "Chemistry Tests",
+        "Laboratory Tests" ;
+    cfa:bcParent ncit:C49237 ;
+    cfa:isIdentifiedBy ncit:C105585 ;
+    cfa:resultScale "Ordinal",
+        "Quantitative" .
+
+cl:C71620 a cfa:Codelist ;
+    rdfs:label "Unit" ;
+    skos:notation "UNIT" ;
+    cfa:extensible true ;
+    cfa:isIdentifiedBy ncit:C71620 .
+
+dom:LB a cfa:Domain ;
+    skos:notation "LB" .
+

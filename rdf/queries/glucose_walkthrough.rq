@@ -1,0 +1,39 @@
+# Note: queries are separated by a line of three dashes after a hash. Run: python3 rdf/src/run_queries.py rdf/output/glucose.ttl rdf/queries/glucose_walkthrough.rq
+PREFIX cfa:  <https://w3id.org/cdisc-for-ai/ontology#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+# Q1: every DSS of the glucose BC, with specimen, method and permitted units
+SELECT ?ds ?test ?specimen ?method (GROUP_CONCAT(?unitSV; separator=", ") AS ?units) WHERE {
+  ?dss cfa:specializes ?bc ; skos:notation ?ds ; cfa:testCode/skos:notation ?test .
+  ?bc cfa:isIdentifiedBy/skos:prefLabel "Glucose Measurement" .
+  OPTIONAL { ?dss cfa:hasVariableSpecialization [ cfa:variable/skos:notation ?sv ; cfa:pinnedValue/skos:prefLabel ?specimen ] FILTER(STRENDS(?sv,"SPEC")) }
+  OPTIONAL { ?dss cfa:hasVariableSpecialization [ cfa:variable/skos:notation ?mv ; cfa:pinnedValue/skos:prefLabel ?method ] FILTER(STRENDS(?mv,"METHOD")) }
+  OPTIONAL { ?dss cfa:hasVariableSpecialization [ cfa:variable/skos:notation ?uv ; cfa:drawsFrom ?cl ; cfa:permittedValue ?u ] FILTER(STRENDS(?uv,"ORRESU"))
+             ?m cfa:inCodelist ?cl ; cfa:term ?u ; cfa:submissionValue ?unitSV }
+} GROUP BY ?ds ?test ?specimen ?method ORDER BY ?ds
+#---
+PREFIX cfa:  <https://w3id.org/cdisc-for-ai/ontology#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+# Q2: observables realized by more than one DSS (Key_Shared_With)
+SELECT ?observable (GROUP_CONCAT(?ds; separator=", ") AS ?dss) WHERE {
+  ?d cfa:realizes ?obs ; skos:notation ?ds . ?obs <http://www.w3.org/2000/01/rdf-schema#label> ?observable
+} GROUP BY ?observable HAVING (COUNT(?d) > 1)
+#---
+PREFIX cfa:  <https://w3id.org/cdisc-for-ai/ontology#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+# Q3: DSSs whose test concept is not the concept of the BC they specialize (GLUCPE)
+SELECT ?ds ?testConcept ?testLabel ?bcConcept ?bcLabel WHERE {
+  ?d skos:notation ?ds ; cfa:testCode/cfa:isIdentifiedBy ?testConcept ; cfa:specializes/cfa:isIdentifiedBy ?bcConcept .
+  FILTER(?testConcept != ?bcConcept)
+  ?testConcept skos:prefLabel ?testLabel . ?bcConcept skos:prefLabel ?bcLabel .
+}
+#---
+PREFIX cfa:  <https://w3id.org/cdisc-for-ai/ontology#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+# Q4: facets used by glucose DSSs, with Kerstin's position on each
+SELECT DISTINCT ?variable ?position ?kind ?status WHERE {
+  ?dss cfa:testCode/skos:notation "GLUC" ; cfa:hasVariableSpecialization/cfa:variable ?v .
+  ?v skos:notation ?variable .
+  OPTIONAL { ?v cfa:facetPosition/rdfs:label ?position ; cfa:facetKind/rdfs:label ?kind ; cfa:positionStatus ?status }
+} ORDER BY ?variable
