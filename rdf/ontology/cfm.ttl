@@ -70,6 +70,7 @@ cfm:pairedColumn a owl:DatatypeProperty ; rdfs:comment "Parallel list, bound to 
 cfm:pairedSplit a owl:DatatypeProperty .
 cfm:literalTemplate a owl:DatatypeProperty ; rdfs:comment "Template for a literal object (instead of cfm:column)." .
 cfm:objectTemplate a owl:DatatypeProperty ; rdfs:comment "IRI template for the object." .
+cfm:objectClass a owl:ObjectProperty ; rdfs:comment "rdf:type given to each object made from cfm:objectTemplate." .
 cfm:objectConstant a owl:ObjectProperty ; rdfs:comment "A fixed object." .
 cfm:onSubject   a owl:DatatypeProperty ; rdfs:comment "IRI template for a different subject (e.g. put labels on the NCIt concept)." .
 cfm:tokensFrom  a owl:ObjectProperty ; rdfs:comment "Look the value up among individuals with this rdf:type or cfm:inTokenScheme, by cfm:sourceToken; fall back to cfm:objectTemplate, or stop." .
@@ -87,3 +88,20 @@ cfm:matches     a owl:DatatypeProperty ; rdfs:comment "Regex for cfm:onlyIfColum
 cfm:recordsReference a owl:ObjectProperty ; rdfs:comment "Record cfm:keyTemplate in cfm:referenceSet for each object (skipped if a variable in the key is empty)." .
 cfm:referenceSet a owl:DatatypeProperty .
 cfm:keyTemplate a owl:DatatypeProperty .
+
+# added for the full conversion
+cfm:includeFile  a owl:ObjectProperty ; rdfs:domain cfm:RunProfile ; rdfs:comment "If given, the profile reads only these workbooks." .
+cfm:unscoped     a owl:DatatypeProperty ; rdfs:domain cfm:RunProfile ; rdfs:comment "true: no scope filtering and no cfm:restrictTo; every row of every workbook." .
+cfm:onlyUnscoped a owl:DatatypeProperty ; rdfs:domain cfm:RowMapping ; rdfs:comment "true: run this mapping only in unscoped profiles." .
+cfm:skipRowUnless a owl:DatatypeProperty ; rdfs:comment "Skip the subject unless all of these variables are non-empty." .
+cfm:skipRowIf    a owl:DatatypeProperty ; rdfs:comment "Skip the subject if any of these variables is non-empty." .
+cfm:bindPrefix   a owl:DatatypeProperty ; rdfs:comment "Bind the first n characters of {value} to {value_prefix}." .
+cfm:objectLabel  a owl:DatatypeProperty ; rdfs:comment "Literal template: rdfs:label for the object made from cfm:objectTemplate." .
+cfm:objectNotation a owl:DatatypeProperty ; rdfs:comment "Literal template: skos:notation for the object made from cfm:objectTemplate." .
+# Built-in variables: {file_path}, {file_name}, {file_stem}. A column whose name
+# has characters outside [A-Za-z0-9_] is also available with those replaced by
+# "_" (e.g. {Variable_Name}). A column missing from one of several workbooks
+# counts as empty in cfm:column and conditions; templates stay strict.
+cfm:lookupKeyTemplate a owl:DatatypeProperty ; rdfs:comment "Lookup: key built from each lookup-sheet row (instead of cfm:keyColumn)." .
+cfm:fallbackKeyTemplate a owl:DatatypeProperty ; rdfs:comment "Lookup: keys tried in turn if cfm:keyTemplate is not found." .
+cfm:optional a owl:DatatypeProperty ; rdfs:comment "Lookup: true leaves the variable empty instead of stopping the build when nothing is found." .

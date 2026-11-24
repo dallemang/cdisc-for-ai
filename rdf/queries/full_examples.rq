@@ -1,0 +1,53 @@
+# Queries that cross the reference workbooks. Queries are separated by a line of three dashes after a hash.
+PREFIX cfa:  <https://w3id.org/cdisc-for-ai/ontology#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+# Q1: LBSPEC across five workbooks: IG table (SDTM_Variables), Model variable, position (Domain_Metadata), IG statements, codelist
+SELECT ?label ?model ?role ?core ?position ?status ?statement ?codelist WHERE {
+  ?v skos:notation "LBSPEC" ; cfa:inDomain/skos:notation "LB" ; rdfs:label ?label .
+  OPTIONAL { ?v cfa:instantiates/skos:notation ?model }
+  OPTIONAL { ?v cfa:playsRole/rdfs:label ?role }
+  OPTIONAL { ?v cfa:isDesignated/rdfs:label ?core }
+  OPTIONAL { ?v cfa:facetPosition/rdfs:label ?position ; cfa:positionStatus ?status }
+  OPTIONAL { ?s cfa:namesVariable ?v ; skos:notation ?statement }
+  OPTIONAL { ?v cfa:drawsFrom/rdfs:label ?codelist }
+}
+#---
+PREFIX cfa:  <https://w3id.org/cdisc-for-ai/ontology#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+# Q2: DSSs per domain and Findings file, with how many specify an observable
+SELECT ?domain ?file (COUNT(DISTINCT ?dss) AS ?dss_count) (COUNT(DISTINCT ?obs) AS ?observables) WHERE {
+  ?dss a cfa:DatasetSpecialization ; cfa:inDomain/skos:notation ?domain ; <http://www.w3.org/ns/prov#wasDerivedFrom>/rdfs:label ?file .
+  OPTIONAL { ?dss cfa:realizes ?obs }
+} GROUP BY ?domain ?file ORDER BY DESC(?dss_count)
+#---
+PREFIX cfa:  <https://w3id.org/cdisc-for-ai/ontology#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+# Q3: an instrument question: test code -> instrument -> NCIt anchors -> DSS
+SELECT ?testcode ?test ?instrument ?instrumentConcept ?questionGroup ?dss WHERE {
+  ?tc cfa:belongsToInstrument ?i ; skos:notation ?testcode ; rdfs:label ?test .
+  ?i rdfs:label ?instrument ; cfa:isIdentifiedBy/skos:prefLabel ?instrumentConcept .
+  OPTIONAL { ?i cfa:groupsQuestionsUnder/skos:prefLabel ?questionGroup }
+  ?d cfa:testCode ?tc ; rdfs:label ?dss .
+} LIMIT 5
+#---
+PREFIX cfa:  <https://w3id.org/cdisc-for-ai/ontology#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+# Q4: free-text strings that name more than one test concept, with the tests
+SELECT ?string (GROUP_CONCAT(?test; separator=" | ") AS ?tests) WHERE {
+  ?r cfa:isReadingOf/rdfs:label ?string ; cfa:namesTestConcept/skos:prefLabel ?test .
+} GROUP BY ?string ORDER BY ?string LIMIT 6
+#---
+PREFIX cfa:  <https://w3id.org/cdisc-for-ai/ontology#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+# Q5: domain coverage: which Findings file covers each Findings domain, and why not where none does
+SELECT ?domain ?name ?status ?coveredBy ?reason WHERE {
+  ?d a cfa:Domain ; skos:notation ?domain ; rdfs:label ?name ; cfa:coverageIs/rdfs:label ?status ;
+     cfa:inObservationClass/rdfs:label "Findings" .
+  OPTIONAL { ?d cfa:isCoveredBy/rdfs:label ?coveredBy }
+  OPTIONAL { ?d cfa:coverageReason ?reason }
+} ORDER BY ?status ?domain LIMIT 12

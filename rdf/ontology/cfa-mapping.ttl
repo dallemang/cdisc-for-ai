@@ -2,19 +2,41 @@
 # Every naming and modelling decision of the converter lives here; the engine
 # (rdf/src/build_rdf.py) holds none. Vocabulary for this file: cfm.ttl.
 # The prefixes below are also the prefixes of the output.
+#
+# Sheets that copy another workbook (each Findings file's Test_Identity,
+# Axis_Meaning and Domain_Variables, SDTMIG_Statements' Variables sheet) are not
+# read: the original is, and the copies would only merge into the same nodes.
+# Columns that summarize what the graph already states (counts, rollups such as
+# DS_Codes, Key_Positions, referenced_by) are not read either.
 
 @prefix cfa:  <https://w3id.org/cdisc-for-ai/ontology#> .
 @prefix cfm:  <https://w3id.org/cdisc-for-ai/mapping-vocab#> .
 @prefix map:  <https://w3id.org/cdisc-for-ai/mapping#> .
 @prefix dom:  <https://w3id.org/cdisc-for-ai/id/domain/> .
+@prefix dset: <https://w3id.org/cdisc-for-ai/id/dataset/> .
 @prefix var:  <https://w3id.org/cdisc-for-ai/id/variable/> .
+@prefix mvar: <https://w3id.org/cdisc-for-ai/id/modelvariable/> .
+@prefix fct:  <https://w3id.org/cdisc-for-ai/id/facet/> .
 @prefix tc:   <https://w3id.org/cdisc-for-ai/id/testcode/> .
+@prefix inst: <https://w3id.org/cdisc-for-ai/id/instrument/> .
 @prefix bc:   <https://w3id.org/cdisc-for-ai/id/bc/> .
 @prefix dss:  <https://w3id.org/cdisc-for-ai/id/dss/> .
 @prefix vs:   <https://w3id.org/cdisc-for-ai/id/vs/> .
 @prefix cl:   <https://w3id.org/cdisc-for-ai/id/codelist/> .
 @prefix clm:  <https://w3id.org/cdisc-for-ai/id/member/> .
 @prefix obs:  <https://w3id.org/cdisc-for-ai/id/observable/> .
+@prefix stmt: <https://w3id.org/cdisc-for-ai/id/statement/> .
+@prefix shs:  <https://w3id.org/cdisc-for-ai/id/sharedstring/> .
+@prefix shu:  <https://w3id.org/cdisc-for-ai/id/sharedstringuse/> .
+@prefix phr:  <https://w3id.org/cdisc-for-ai/id/phrase/> .
+@prefix pho:  <https://w3id.org/cdisc-for-ai/id/phraseoccurrence/> .
+@prefix coll: <https://w3id.org/cdisc-for-ai/id/collision/> .
+@prefix collr: <https://w3id.org/cdisc-for-ai/id/collisionreading/> .
+@prefix fold: <https://w3id.org/cdisc-for-ai/id/foldedfacet/> .
+@prefix ovr:  <https://w3id.org/cdisc-for-ai/id/override/> .
+@prefix rule: <https://w3id.org/cdisc-for-ai/id/routingrule/> .
+@prefix excl: <https://w3id.org/cdisc-for-ai/id/exclusion/> .
+@prefix val:  <https://w3id.org/cdisc-for-ai/id/value/> .
 @prefix src:  <https://w3id.org/cdisc-for-ai/id/source/> .
 @prefix ncit: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#> .
 @prefix loinc: <https://loinc.org/> .
@@ -29,26 +51,53 @@
 
 map:TestIdentityFile a cfm:SourceFile ;
     cfm:path "sdtm-test-codes/machine_actionable/SDTM_Test_Identity.xlsx" .
-
+map:InstrumentTestIdentityFile a cfm:SourceFile ;
+    cfm:path "sdtm-test-codes/machine_actionable/SDTM_Instrument_Test_Identity.xlsx" .
+map:InstrumentIdentityFile a cfm:SourceFile ;
+    cfm:path "sdtm-test-codes/machine_actionable/SDTM_Instrument_Identity.xlsx" .
 map:SpecimenFile a cfm:SourceFile ;
     cfm:path "sdtm-findings-graph/machine_actionable/Specimen_Findings.xlsx" .
+map:MeasurementFile a cfm:SourceFile ;
+    cfm:path "sdtm-findings-graph/machine_actionable/Measurement_Findings.xlsx" .
+map:InstrumentFile a cfm:SourceFile ;
+    cfm:path "sdtm-findings-graph/machine_actionable/Instrument_Findings.xlsx" .
+map:ImmunogenicityFile a cfm:SourceFile ;
+    cfm:path "sdtm-findings-graph/machine_actionable/Immunogenicity_Findings.xlsx" .
+map:CodelistPhrasesFile a cfm:SourceFile ;
+    cfm:path "sdtm-findings-graph/machine_actionable/Codelist_Phrases.xlsx" .
+map:DomainCoverageFile a cfm:SourceFile ;
+    cfm:path "sdtm-findings-graph/machine_actionable/Domain_Coverage.xlsx" .
+map:DomainMetadataFile a cfm:SourceFile ;
+    cfm:path "sdtm-domain-reference/machine_actionable/SDTM_Domain_Metadata.xlsx" .
+map:VariablesFile a cfm:SourceFile ;
+    cfm:path "sdtm-domain-reference/machine_actionable/SDTM_Variables.xlsx" .
+map:StatementsFile a cfm:SourceFile ;
+    cfm:path "sdtm-domain-reference/machine_actionable/SDTMIG_Statements.xlsx" .
 
 # ================================================================ run profiles
 
 map:GlucoseProfile a cfm:RunProfile ;
     cfm:name "glucose" ;
     cfm:output "rdf/output/glucose.ttl" ;
+    cfm:includeFile map:TestIdentityFile, map:SpecimenFile, map:DomainMetadataFile ;
     cfm:testCodes "GLUC GLUCPE" ;
     cfm:domainsFrom [ cfm:sourceFile map:SpecimenFile ; cfm:sourceSheet "Measurement_Specs" ;
                       cfm:column "domain" ; cfm:filterColumn "TESTCD" ] .
 
-map:AllSpecimenProfile a cfm:RunProfile ;
-    cfm:name "all" ;
+map:SpecimenProfile a cfm:RunProfile ;
+    cfm:name "specimen" ;
     cfm:output "rdf/output/specimen_findings.ttl" ;
+    cfm:includeFile map:TestIdentityFile, map:SpecimenFile, map:DomainMetadataFile ;
     cfm:testCodesFrom [ cfm:sourceFile map:SpecimenFile ; cfm:sourceSheet "Measurement_Specs" ; cfm:column "TESTCD" ] ,
                       [ cfm:sourceFile map:SpecimenFile ; cfm:sourceSheet "Test_Identity" ; cfm:column "TESTCD" ] ;
     cfm:domainsFrom [ cfm:sourceFile map:SpecimenFile ; cfm:sourceSheet "Measurement_Specs" ;
                       cfm:column "domain" ; cfm:filterColumn "TESTCD" ] .
+
+# Every reference file, every row: no scope, no reference restriction.
+map:FullProfile a cfm:RunProfile ;
+    cfm:name "full" ;
+    cfm:output "rdf/output/cdisc_for_ai.ttl" ;
+    cfm:unscoped true .
 
 # ================================================================ token lookups
 # Spreadsheet strings that stand for individuals of the vocabulary.
@@ -58,6 +107,7 @@ cfa:System       cfm:sourceToken "system" .
 cfa:Method       cfm:sourceToken "method" .
 cfa:Scale        cfm:sourceToken "scale" .
 cfa:OpenPosition cfm:sourceToken "open" .
+cfa:NotPartOfObservable cfm:sourceToken "not part of the observable" .
 
 cfa:ObservableFacet cfm:sourceToken "observable" .
 cfa:PracticeFacet   cfm:sourceToken "practice" .
@@ -67,33 +117,27 @@ cfa:OpenFacet       cfm:sourceToken "open" .
 cfa:WithUnits    cfm:sourceToken "UNITS" .
 cfa:WithoutUnits cfm:sourceToken "NO_UNITS" .
 
+# ================================================================ provenance (every file)
 
-# ================================================================ provenance (both files)
-
-map:TestIdentitySource a cfm:RowMapping ;
-    cfm:sourceFile map:TestIdentityFile ; cfm:sourceSheet "Provenance" ;
-    cfm:subject "src:SDTM_Test_Identity" ;
+map:Sources a cfm:RowMapping ;
+    cfm:sourceFile map:TestIdentityFile, map:InstrumentTestIdentityFile, map:InstrumentIdentityFile,
+        map:SpecimenFile, map:MeasurementFile, map:InstrumentFile, map:ImmunogenicityFile,
+        map:CodelistPhrasesFile, map:DomainCoverageFile, map:DomainMetadataFile, map:VariablesFile, map:StatementsFile ;
+    cfm:sourceSheet "Provenance" ;
+    cfm:subject "src:{file_stem}" ;
     cfm:class cfa:SourceFile ;
     cfm:derive [ cfm:as "keyhead" ; cfm:order 1 ; cfm:fromVar "Key" ; cfm:splitOn "." ; cfm:pick 0 ] ;
-    cfm:property map:pSrcLabel, map:pSrcPath, map:pSrcVersion, map:pSrcHash, map:pSrcGenerated .
+    cfm:property
+        [ cfm:predicate rdfs:label ; cfm:literalTemplate "{file_name}" ] ,
+        [ cfm:predicate dct:source ; cfm:literalTemplate "{file_path}" ] ,
+        [ cfm:predicate cfa:sourceVersion ; cfm:literalTemplate "{Key} {Value}" ;
+          cfm:onlyIfColumn "Key" ; cfm:inValues "SDTM_CT COSMoS SDTMIG SDTM NCIt" ] ,
+        [ cfm:predicate cfa:contentSha256 ; cfm:literalTemplate "{keyhead} {Value}" ;
+          cfm:onlyIfColumn "Key" ; cfm:matches ".*\\.Content_SHA256" ] ,
+        [ cfm:predicate prov:generatedAtTime ; cfm:literalTemplate "{Value}" ;
+          cfm:onlyIfColumn "Key" ; cfm:inValues "Generated" ] .
 
-map:SpecimenSource a cfm:RowMapping ;
-    cfm:sourceFile map:SpecimenFile ; cfm:sourceSheet "Provenance" ;
-    cfm:subject "src:Specimen_Findings" ;
-    cfm:class cfa:SourceFile ;
-    cfm:derive [ cfm:as "keyhead" ; cfm:order 1 ; cfm:fromVar "Key" ; cfm:splitOn "." ; cfm:pick 0 ] ;
-    cfm:property map:pSrcLabel, map:pSrcPath, map:pSrcVersion, map:pSrcHash, map:pSrcGenerated .
-
-map:pSrcLabel     cfm:predicate rdfs:label ; cfm:literalTemplate "{file_name}" .
-map:pSrcPath      cfm:predicate dct:source ; cfm:literalTemplate "{file_path}" .
-map:pSrcVersion   cfm:predicate cfa:sourceVersion ; cfm:literalTemplate "{Key} {Value}" ;
-                  cfm:onlyIfColumn "Key" ; cfm:inValues "SDTM_CT COSMoS SDTMIG SDTM NCIt" .
-map:pSrcHash      cfm:predicate cfa:contentSha256 ; cfm:literalTemplate "{keyhead} {Value}" ;
-                  cfm:onlyIfColumn "Key" ; cfm:matches ".*\\.Content_SHA256" .
-map:pSrcGenerated cfm:predicate prov:generatedAtTime ; cfm:literalTemplate "{Value}" ;
-                  cfm:onlyIfColumn "Key" ; cfm:inValues "Generated" .
-
-# ================================================================ SDTM_Test_Identity
+# ================================================================ test identity: SDTM_Test_Identity
 
 map:TestCodes a cfm:RowMapping ;
     cfm:sourceFile map:TestIdentityFile ; cfm:sourceSheet "Test Codes" ;
@@ -105,8 +149,8 @@ map:TestCodes a cfm:RowMapping ;
         [ cfm:predicate skos:notation ; cfm:column "TESTCD" ] ,
         [ cfm:predicate rdfs:label ; cfm:column "TEST" ] ,
         [ cfm:predicate cfa:inDomain ; cfm:objectTemplate "dom:{d}" ] ,
-        [ cfm:predicate cfa:isIdentifiedBy ; cfm:column "NCIt_Code" ; cfm:valuePattern "C\\d+" ; cfm:objectTemplate "ncit:{value}" ] ,
-        [ cfm:predicate prov:wasDerivedFrom ; cfm:objectConstant src:SDTM_Test_Identity ] .
+        [ cfm:predicate cfa:isIdentifiedBy ; cfm:column "NCIt_Code" ; cfm:valuePattern "C\\d+" ; cfm:objectTemplate "ncit:{value}" ; cfm:objectClass cfa:NCItConcept ] ,
+        [ cfm:predicate prov:wasDerivedFrom ; cfm:objectTemplate "src:{file_stem}" ] .
 
 map:TestCodeDomains a cfm:RowMapping ;
     cfm:sourceFile map:TestIdentityFile ; cfm:sourceSheet "Test Codes" ;
@@ -114,22 +158,83 @@ map:TestCodeDomains a cfm:RowMapping ;
     cfm:forEachSplit [ cfm:column "SDTM_Domains" ; cfm:split ";" ; cfm:as "d" ] ;
     cfm:subject "dom:{d}" ;
     cfm:class cfa:Domain ;
-    cfm:property [ cfm:predicate skos:notation ; cfm:literalTemplate "{d}" ] .
+    cfm:property [ cfm:predicate skos:notation ; cfm:literalTemplate "{d}" ;
+                   cfm:recordsReference [ cfm:referenceSet "domain" ; cfm:keyTemplate "{d}" ] ] .
 
+# NCIt concepts of test codes, from both identity files.
 map:TestConcepts a cfm:RowMapping ;
-    cfm:sourceFile map:TestIdentityFile ; cfm:sourceSheet "Test Codes" ;
+    cfm:sourceFile map:TestIdentityFile, map:InstrumentTestIdentityFile ; cfm:sourceSheet "Test Codes" ;
     cfm:scopeColumn "TESTCD" ; cfm:scopeSet "testcd" ;
+    cfm:skipRowUnless "NCIt_Code" ;
     cfm:subject "ncit:{NCIt_Code}" ;
+    cfm:class cfa:NCItConcept ;
     cfm:property
         [ cfm:predicate skos:prefLabel ; cfm:column "NCIt_Preferred_Term" ] ,
         [ cfm:predicate skos:definition ; cfm:column "NCIt_Definition" ] ,
         [ cfm:predicate skos:altLabel ; cfm:column "NCIt_Synonyms" ; cfm:split "|" ] ,
-        [ cfm:predicate cfa:umlsCui ; cfm:column "UMLS_CUI" ] .
+        [ cfm:predicate cfa:umlsCui ; cfm:column "UMLS_CUI" ] ,
+        [ cfm:predicate cfa:ncimCui ; cfm:column "NCIm_CUI" ] .
 
-# ================================================================ Specimen_Findings / Measurement_Specs
+# ================================================================ test identity: instruments
+
+# Test codes bound to an instrument codelist. TESTCD is unique across them and
+# never repeats a domain-level code in the same domain, so the IRI scheme is the
+# same as for domain-level test codes.
+map:InstrumentTestCodes a cfm:RowMapping ;
+    cfm:sourceFile map:InstrumentTestIdentityFile ; cfm:sourceSheet "Test Codes" ;
+    cfm:subject "tc:{Domain}-{TESTCD}" ;
+    cfm:class cfa:TestCode ;
+    cfm:property
+        [ cfm:predicate skos:notation ; cfm:column "TESTCD" ] ,
+        [ cfm:predicate rdfs:label ; cfm:column "TEST" ] ,
+        [ cfm:predicate cfa:inDomain ; cfm:objectTemplate "dom:{Domain}" ] ,
+        [ cfm:predicate cfa:isIdentifiedBy ; cfm:column "NCIt_Code" ; cfm:valuePattern "C\\d+" ; cfm:objectTemplate "ncit:{value}" ; cfm:objectClass cfa:NCItConcept ] ,
+        [ cfm:predicate cfa:belongsToInstrument ; cfm:column "Codelist_TESTCD" ; cfm:objectTemplate "inst:{value}" ; cfm:objectClass cfa:Instrument ] ,
+        [ cfm:predicate prov:wasDerivedFrom ; cfm:objectTemplate "src:{file_stem}" ] .
+
+map:InstrumentTestCodeDomains a cfm:RowMapping ;
+    cfm:sourceFile map:InstrumentTestIdentityFile ; cfm:sourceSheet "Test Codes" ;
+    cfm:subject "dom:{Domain}" ;
+    cfm:class cfa:Domain ;
+    cfm:property [ cfm:predicate skos:notation ; cfm:column "Domain" ] .
+
+# One row per instrument codelist, with two NCIt anchors: the instrument
+# concept and the concept that groups its questions.
+map:Instruments a cfm:RowMapping ;
+    cfm:sourceFile map:InstrumentIdentityFile ; cfm:sourceSheet "Instruments" ;
+    cfm:subject "inst:{Codelist_TESTCD}" ;
+    cfm:class cfa:Instrument ;
+    cfm:property
+        [ cfm:predicate rdfs:label ; cfm:column "Instrument_Label" ] ,
+        [ cfm:predicate skos:notation ; cfm:column "Codelist_TESTCD" ] ,
+        [ cfm:predicate cfa:inDomain ; cfm:objectTemplate "dom:{Domain}" ] ,
+        [ cfm:predicate cfa:isIdentifiedBy ; cfm:column "Instrument_NCIt_Code" ; cfm:valuePattern "C\\d+" ; cfm:objectTemplate "ncit:{value}" ; cfm:objectClass cfa:NCItConcept ] ,
+        [ cfm:predicate cfa:listsQuestionsIn ; cfm:column "Codelist_NCIt_Code" ; cfm:valuePattern "C\\d+" ; cfm:objectTemplate "cl:{value}" ;
+          cfm:objectClass cfa:Codelist ; cfm:objectNotation "{Codelist_TESTCD}" ] ,
+        [ cfm:predicate cfa:isIdentifiedBy ; cfm:column "Codelist_NCIt_Code" ; cfm:onSubject "cl:{value}" ;
+          cfm:objectTemplate "ncit:{value}" ; cfm:objectClass cfa:NCItConcept ] ,
+        [ cfm:predicate cfa:groupsQuestionsUnder ; cfm:column "Container_NCIt_Code" ; cfm:valuePattern "C\\d+" ; cfm:objectTemplate "ncit:{value}" ; cfm:objectClass cfa:NCItConcept ] ,
+        [ cfm:predicate cfa:questionCount ; cfm:column "Question_Count" ; cfm:datatype xsd:integer ] ,
+        [ cfm:predicate cfa:wasMatchedBy ; cfm:column "Instrument_Match_Method" ; cfm:objectTemplate "val:matchmethod-{value}" ;
+          cfm:objectClass cfa:MatchMethod ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate prov:wasDerivedFrom ; cfm:objectTemplate "src:{file_stem}" ] ,
+        # labels of the two NCIt anchors
+        [ cfm:predicate skos:prefLabel ; cfm:column "Instrument_NCIt_Preferred_Term" ; cfm:onSubject "ncit:{Instrument_NCIt_Code}" ] ,
+        [ cfm:predicate skos:altLabel ; cfm:column "Instrument_NCIt_Synonyms" ; cfm:split "|" ; cfm:onSubject "ncit:{Instrument_NCIt_Code}" ] ,
+        [ cfm:predicate skos:definition ; cfm:column "Instrument_NCIt_Definition" ; cfm:onSubject "ncit:{Instrument_NCIt_Code}" ] ,
+        [ cfm:predicate cfa:umlsCui ; cfm:column "Instrument_UMLS_CUI" ; cfm:onSubject "ncit:{Instrument_NCIt_Code}" ] ,
+        [ cfm:predicate cfa:ncimCui ; cfm:column "Instrument_NCIm_CUI" ; cfm:onSubject "ncit:{Instrument_NCIt_Code}" ] ,
+        [ cfm:predicate skos:prefLabel ; cfm:column "Container_NCIt_Preferred_Term" ; cfm:onlyIfPresent "Container_NCIt_Code" ; cfm:onSubject "ncit:{Container_NCIt_Code}" ] ,
+        [ cfm:predicate skos:altLabel ; cfm:column "Container_NCIt_Synonyms" ; cfm:split "|" ; cfm:onlyIfPresent "Container_NCIt_Code" ; cfm:onSubject "ncit:{Container_NCIt_Code}" ] ,
+        [ cfm:predicate skos:definition ; cfm:column "Container_NCIt_Definition" ; cfm:onlyIfPresent "Container_NCIt_Code" ; cfm:onSubject "ncit:{Container_NCIt_Code}" ] ,
+        [ cfm:predicate cfa:umlsCui ; cfm:column "Container_UMLS_CUI" ; cfm:onlyIfPresent "Container_NCIt_Code" ; cfm:onSubject "ncit:{Container_NCIt_Code}" ] ,
+        [ cfm:predicate cfa:ncimCui ; cfm:column "Container_NCIm_CUI" ; cfm:onlyIfPresent "Container_NCIt_Code" ; cfm:onSubject "ncit:{Container_NCIt_Code}" ] .
+
+# ================================================================ Findings files: Measurement_Specs
 
 map:BiomedicalConcepts a cfm:RowMapping ;
-    cfm:sourceFile map:SpecimenFile ; cfm:sourceSheet "Measurement_Specs" ;
+    cfm:sourceFile map:SpecimenFile, map:MeasurementFile, map:InstrumentFile, map:ImmunogenicityFile ;
+    cfm:sourceSheet "Measurement_Specs" ;
     cfm:scopeColumn "TESTCD" ; cfm:scopeSet "testcd" ;
     cfm:derive [ cfm:as "parent" ; cfm:order 1 ; cfm:fromVar "bc_hierarchy_path" ; cfm:findAll "\\((C\\d+)\\)" ; cfm:pick -2 ] ;
     cfm:subject "bc:{bc_id}" ;
@@ -137,19 +242,25 @@ map:BiomedicalConcepts a cfm:RowMapping ;
     cfm:property
         [ cfm:predicate rdfs:label ; cfm:onlyIfPresent "bc_short_name" ; cfm:literalTemplate "{bc_short_name} (COSMoS BC)" ] ,
         [ cfm:predicate skos:definition ; cfm:column "bc_definition" ] ,
-        [ cfm:predicate cfa:isIdentifiedBy ; cfm:column "bc_ncit_code" ; cfm:skipUnlessPattern "C\\d+" ; cfm:objectTemplate "ncit:{value}" ] ,
+        [ cfm:predicate cfa:isIdentifiedBy ; cfm:column "bc_ncit_code" ; cfm:skipUnlessPattern "C\\d+" ; cfm:objectTemplate "ncit:{value}" ; cfm:objectClass cfa:NCItConcept ] ,
         [ cfm:predicate cfa:bcCategory ; cfm:column "bc_categories" ; cfm:split ";" ] ,
         [ cfm:predicate cfa:resultScale ; cfm:column "result_scales" ; cfm:split ";" ] ,
-        [ cfm:predicate cfa:bcParent ; cfm:column "parent" ; cfm:objectTemplate "ncit:{value}" ] ,
+        [ cfm:predicate cfa:bcParent ; cfm:column "parent" ; cfm:objectTemplate "ncit:{value}" ; cfm:objectClass cfa:NCItConcept ] ,
         [ cfm:predicate skos:prefLabel ; cfm:column "bc_parent_label" ; cfm:onlyIfPresent "parent" ; cfm:onSubject "ncit:{parent}" ] ,
-        [ cfm:predicate cfa:loinc ; cfm:column "LOINC_BC" ; cfm:split ";" ; cfm:objectTemplate "loinc:{value}" ] ,
-        [ cfm:predicate rdfs:label ; cfm:column "LOINC_BC" ; cfm:split ";" ; cfm:onSubject "loinc:{value}" ; cfm:literalTemplate "LOINC {value}" ] ,
-        [ cfm:predicate prov:wasDerivedFrom ; cfm:objectConstant src:Specimen_Findings ] .
+        [ cfm:predicate cfa:isGroupedUnder ; cfm:column "parent_bc_id" ; cfm:objectTemplate "bc:{value}" ; cfm:objectClass cfa:BiomedicalConcept ] ,
+        [ cfm:predicate cfa:isOfBCType ; cfm:column "bc_type" ; cfm:objectTemplate "val:bctype-{value}" ;
+          cfm:objectClass cfa:BCType ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate cfa:loinc ; cfm:column "LOINC_BC" ; cfm:split ";" ; cfm:objectTemplate "loinc:{value}" ; cfm:objectLabel "LOINC {value}" ] ,
+        [ cfm:predicate prov:wasDerivedFrom ; cfm:objectTemplate "src:{file_stem}" ] .
 
 map:DatasetSpecializations a cfm:RowMapping ;
-    cfm:sourceFile map:SpecimenFile ; cfm:sourceSheet "Measurement_Specs" ;
+    cfm:sourceFile map:SpecimenFile, map:MeasurementFile, map:InstrumentFile, map:ImmunogenicityFile ;
+    cfm:sourceSheet "Measurement_Specs" ;
     cfm:scopeColumn "TESTCD" ; cfm:scopeSet "testcd" ;
-    cfm:derive map:dObsIri1, map:dObsIri2 ;
+    cfm:derive map:dObsIri1, map:dObsIri2,
+        # COSMoS writes the source as LB.LBTESTCD, but as MB-MBTESTCD in four DSSs
+        [ cfm:as "src_ds" ; cfm:order 3 ; cfm:fromVar "source" ; cfm:findAll "([A-Z]+)" ; cfm:pick 0 ] ,
+        [ cfm:as "src_var" ; cfm:order 4 ; cfm:fromVar "source" ; cfm:findAll "([A-Z]+)" ; cfm:pick 1 ] ;
     cfm:subject "dss:{domain}-{ds_id}" ;
     cfm:class cfa:DatasetSpecialization ;
     cfm:property
@@ -158,26 +269,50 @@ map:DatasetSpecializations a cfm:RowMapping ;
         [ cfm:predicate cfa:inDomain ; cfm:objectTemplate "dom:{domain}" ] ,
         [ cfm:predicate cfa:specializes ; cfm:objectTemplate "bc:{bc_id}" ] ,
         [ cfm:predicate cfa:testCode ; cfm:objectTemplate "tc:{domain}-{TESTCD}" ] ,
+        [ cfm:predicate cfa:belongsToInstrument ; cfm:column "Codelist_TESTCD" ; cfm:onlyIfColumn "ct_source" ; cfm:inValues "instrument_codelist" ;
+          cfm:objectTemplate "inst:{value}" ; cfm:objectClass cfa:Instrument ] ,
+        [ cfm:predicate cfa:inObservationClass ; cfm:column "Observation_Class" ; cfm:objectTemplate "val:obsclass-{value}" ;
+          cfm:objectClass cfa:ObservationClass ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate cfa:isKeyedOn ; cfm:onlyIfPresent "src_var" ; cfm:objectTemplate "var:{src_ds}-{src_var}" ; cfm:objectClass cfa:Variable ] ,
+        [ cfm:predicate cfa:validFromIG ; cfm:column "sdtmig_start_version" ] ,
+        [ cfm:predicate cfa:validUntilIG ; cfm:column "sdtmig_end_version" ] ,
+        [ cfm:predicate cfa:allowsUnit ; cfm:column "Allowed_Units" ; cfm:split ";" ] ,
         [ cfm:predicate dct:modified ; cfm:column "package_date" ; cfm:datatype xsd:date ] ,
-        [ cfm:predicate cfa:loinc ; cfm:column "LOINC_DSS" ; cfm:split ";" ; cfm:objectTemplate "loinc:{value}" ] ,
-        [ cfm:predicate rdfs:label ; cfm:column "LOINC_DSS" ; cfm:split ";" ; cfm:onSubject "loinc:{value}" ; cfm:literalTemplate "LOINC {value}" ] ,
-        [ cfm:predicate prov:wasDerivedFrom ; cfm:objectConstant src:Specimen_Findings ] ,
-        [ cfm:predicate cfa:realizes ; cfm:objectTemplate "obs:{obs_iri}" ] .
+        [ cfm:predicate cfa:loinc ; cfm:column "LOINC_DSS" ; cfm:split ";" ; cfm:objectTemplate "loinc:{value}" ; cfm:objectLabel "LOINC {value}" ] ,
+        [ cfm:predicate prov:wasDerivedFrom ; cfm:objectTemplate "src:{file_stem}" ] ,
+        [ cfm:predicate cfa:realizes ; cfm:onlyIfPresent "Observable_Key" ; cfm:objectTemplate "obs:{obs_iri}" ] .
 
 map:dObsIri1 cfm:as "obs_tmp" ; cfm:order 1 ; cfm:fromVar "Observable_Key" ; cfm:replaceFrom " / " ; cfm:replaceTo "~" .
 map:dObsIri2 cfm:as "obs_iri" ; cfm:order 2 ; cfm:fromVar "obs_tmp" ; cfm:replaceFrom "|" ; cfm:replaceTo "-" .
 
+# Test codes as the Findings files use them; adds the four example test codes
+# that are not in CT (ct_source lzzt_example) and merges with the identity files.
+map:SpecTestCodes a cfm:RowMapping ;
+    cfm:sourceFile map:SpecimenFile, map:MeasurementFile, map:InstrumentFile, map:ImmunogenicityFile ;
+    cfm:sourceSheet "Measurement_Specs" ;
+    cfm:scopeColumn "TESTCD" ; cfm:scopeSet "testcd" ;
+    cfm:subject "tc:{domain}-{TESTCD}" ;
+    cfm:class cfa:TestCode ;
+    cfm:property
+        [ cfm:predicate skos:notation ; cfm:column "TESTCD" ] ,
+        [ cfm:predicate rdfs:label ; cfm:column "TEST" ] ,
+        [ cfm:predicate cfa:inDomain ; cfm:objectTemplate "dom:{domain}" ] ,
+        [ cfm:predicate cfa:isIdentifiedBy ; cfm:column "TESTCD_NCIt" ; cfm:valuePattern "C\\d+" ; cfm:objectTemplate "ncit:{value}" ; cfm:objectClass cfa:NCItConcept ] .
+
 map:SpecDomains a cfm:RowMapping ;
-    cfm:sourceFile map:SpecimenFile ; cfm:sourceSheet "Measurement_Specs" ;
+    cfm:sourceFile map:SpecimenFile, map:MeasurementFile, map:InstrumentFile, map:ImmunogenicityFile ;
+    cfm:sourceSheet "Measurement_Specs" ;
     cfm:scopeColumn "TESTCD" ; cfm:scopeSet "testcd" ;
     cfm:subject "dom:{domain}" ;
     cfm:class cfa:Domain ;
-    cfm:property [ cfm:predicate skos:notation ; cfm:column "domain" ] .
+    cfm:property [ cfm:predicate skos:notation ; cfm:column "domain" ;
+                   cfm:recordsReference [ cfm:referenceSet "domain" ; cfm:keyTemplate "{value}" ] ] .
 
 # One node per (DSS, variable): replaces the *_value / *_ncit / *_codelist /
 # *_value_list / *_value_list_ncit column families.
 map:VariableSpecializations a cfm:RowMapping ;
-    cfm:sourceFile map:SpecimenFile ; cfm:sourceSheet "Measurement_Specs" ;
+    cfm:sourceFile map:SpecimenFile, map:MeasurementFile, map:InstrumentFile, map:ImmunogenicityFile ;
+    cfm:sourceSheet "Measurement_Specs" ;
     cfm:scopeColumn "TESTCD" ; cfm:scopeSet "testcd" ;
     cfm:forEachFamily "^([A-Z]+)_(value|ncit|codelist|value_list|value_list_ncit)$" ;
     cfm:familySuffixes "value ncit codelist value_list value_list_ncit" ;
@@ -187,50 +322,56 @@ map:VariableSpecializations a cfm:RowMapping ;
     cfm:class cfa:VariableSpecialization ;
     cfm:property
         [ cfm:predicate rdfs:label ; cfm:literalTemplate "{domain}{FAMILY} in {ds_id}" ] ,
-        [ cfm:predicate cfa:variable ; cfm:objectTemplate "var:{domain}{FAMILY}" ] ,
+        [ cfm:predicate cfa:variable ; cfm:objectTemplate "var:{domain}-{domain}{FAMILY}" ] ,
         [ cfm:predicate cfa:hasVariableSpecialization ; cfm:onSubject "dss:{domain}-{ds_id}" ;
           cfm:objectTemplate "vs:{domain}-{ds_id}-{domain}{FAMILY}" ] ,
         [ cfm:predicate cfa:drawsFrom ; cfm:onlyIfPresent "f_codelist" ; cfm:objectTemplate "cl:{cl_cc}" ;
           cfm:recordsReference [ cfm:referenceSet "codelist" ; cfm:keyTemplate "{f_codelist}" ] ] ,
-        [ cfm:predicate cfa:pinnedValue ; cfm:column "f_ncit" ; cfm:valuePattern "C\\d+" ; cfm:objectTemplate "ncit:{value}" ;
+        [ cfm:predicate cfa:pinnedValue ; cfm:column "f_ncit" ; cfm:valuePattern "C\\d+" ; cfm:objectTemplate "ncit:{value}" ; cfm:objectClass cfa:NCItConcept ;
           cfm:recordsReference [ cfm:referenceSet "term" ; cfm:keyTemplate "{f_codelist}|{value}" ] ,
                                [ cfm:referenceSet "codelist" ; cfm:keyTemplate "{f_codelist}" ] ] ,
-        [ cfm:predicate skos:prefLabel ; cfm:column "f_value" ; cfm:onlyIfPresent "f_ncit" ; cfm:onlyIfEmpty "f_codelist" ;
+        [ cfm:predicate skos:altLabel ; cfm:column "f_value" ; cfm:onlyIfPresent "f_ncit" ; cfm:onlyIfEmpty "f_codelist" ;
           cfm:onSubject "ncit:{f_ncit}" ] ,
         [ cfm:predicate cfa:pinnedLiteral ; cfm:column "f_value" ; cfm:onlyIfEmpty "f_ncit" ] ,
         [ cfm:predicate cfa:permittedValue ; cfm:column "f_value_list_ncit" ; cfm:split ";" ;
           cfm:pairedColumn "f_value_list" ; cfm:pairedSplit ";" ;
-          cfm:valuePattern "C\\d+" ; cfm:objectTemplate "ncit:{value}" ;
+          cfm:valuePattern "C\\d+" ; cfm:objectTemplate "ncit:{value}" ; cfm:objectClass cfa:NCItConcept ;
           cfm:recordsReference [ cfm:referenceSet "term" ; cfm:keyTemplate "{f_codelist}|{value}" ] ,
                                [ cfm:referenceSet "codelist" ; cfm:keyTemplate "{f_codelist}" ] ] ,
-        [ cfm:predicate skos:prefLabel ; cfm:column "f_value_list_ncit" ; cfm:split ";" ;
+        [ cfm:predicate skos:altLabel ; cfm:column "f_value_list_ncit" ; cfm:split ";" ;
           cfm:pairedColumn "f_value_list" ; cfm:pairedSplit ";" ; cfm:onlyIfEmpty "f_codelist" ;
           cfm:onSubject "ncit:{value}" ; cfm:literalTemplate "{pair}" ] ,
         [ cfm:predicate cfa:permittedLiteral ; cfm:column "f_value_list" ; cfm:split ";" ; cfm:onlyIfEmpty "f_value_list_ncit" ] .
 
 map:dCodelistCc cfm:as "cl_cc" ; cfm:order 1 ; cfm:fromVar "f_codelist" ;
-    cfm:lookupFile map:SpecimenFile ; cfm:lookupSheet "Codelists" ;
+    cfm:lookupFile map:SpecimenFile, map:MeasurementFile, map:InstrumentFile, map:ImmunogenicityFile ;
+    cfm:lookupSheet "Codelists" ;
     cfm:keyColumn "codelist_submission_value" ; cfm:valueColumn "codelist_concept_id" .
 
 map:FamilyVariables a cfm:RowMapping ;
-    cfm:sourceFile map:SpecimenFile ; cfm:sourceSheet "Measurement_Specs" ;
+    cfm:sourceFile map:SpecimenFile, map:MeasurementFile, map:InstrumentFile, map:ImmunogenicityFile ;
+    cfm:sourceSheet "Measurement_Specs" ;
     cfm:scopeColumn "TESTCD" ; cfm:scopeSet "testcd" ;
     cfm:forEachFamily "^([A-Z]+)_(value|ncit|codelist|value_list|value_list_ncit)$" ;
     cfm:familySuffixes "value ncit codelist value_list value_list_ncit" ;
     cfm:requireAny "f_value", "f_ncit", "f_codelist", "f_value_list" ;
-    cfm:subject "var:{domain}{FAMILY}" ;
+    cfm:subject "var:{domain}-{domain}{FAMILY}" ;
     cfm:class cfa:Variable ;
     cfm:property
         [ cfm:predicate skos:notation ; cfm:literalTemplate "{domain}{FAMILY}" ] ,
         [ cfm:predicate cfa:inDomain ; cfm:objectTemplate "dom:{domain}" ] .
 
 # The observable (Kerstin Forsberg's position): Observable_Key =
-# BC | test | system | scale | method; the test part may be "test / test detail".
-# A facet with a real value gets its triple; UNPINNED gives "leaves open <facet>";
-# "-" gives "does not key on <facet>". Any other value stops the build.
+# BC | test | system | scale | method; the test part may be "test / test detail"
+# (in IS the detail is the binding agent). Only Specimen and Immunogenicity
+# publish keys. A facet with a real value gets its triple; UNPINNED gives
+# "leaves open <facet>"; "-" gives "does not key on <facet>". Any other value
+# stops the build.
 map:Observables a cfm:RowMapping ;
-    cfm:sourceFile map:SpecimenFile ; cfm:sourceSheet "Measurement_Specs" ;
+    cfm:sourceFile map:SpecimenFile, map:MeasurementFile, map:InstrumentFile, map:ImmunogenicityFile ;
+    cfm:sourceSheet "Measurement_Specs" ;
     cfm:scopeColumn "TESTCD" ; cfm:scopeSet "testcd" ;
+    cfm:skipRowUnless "Observable_Key" ;
     cfm:derive map:dObsIri1, map:dObsIri2,
         [ cfm:as "k" ; cfm:order 3 ; cfm:fromVar "Observable_Key" ; cfm:splitParts "|" ;
           cfm:partNames "bc comp system scale method" ; cfm:expectParts 5 ] ,
@@ -247,70 +388,427 @@ map:Observables a cfm:RowMapping ;
         [ cfm:predicate rdfs:label ; cfm:literalTemplate "observable {kl_test} · {kl_system} · {kl_scale} · {kl_method}" ] ,
         [ cfm:predicate skos:notation ; cfm:column "Observable_Key_Label" ] ,
         [ cfm:predicate cfa:viaBiomedicalConcept ; cfm:objectTemplate "bc:{k_bc}" ] ,
-        [ cfm:predicate cfa:component ; cfm:column "comp_main" ; cfm:valuePattern "C\\d+" ; cfm:objectTemplate "ncit:{value}" ] ,
+        [ cfm:predicate cfa:component ; cfm:column "comp_main" ; cfm:valuePattern "C\\d+" ; cfm:objectTemplate "ncit:{value}" ; cfm:objectClass cfa:NCItConcept ] ,
         [ cfm:predicate cfa:componentDetail ; cfm:column "comp_detail" ; cfm:onlyIfColumn "comp_detail" ; cfm:matches "C\\d+" ;
-          cfm:objectTemplate "ncit:{value}" ] ,
+          cfm:objectTemplate "ncit:{value}" ; cfm:objectClass cfa:NCItConcept ] ,
         [ cfm:predicate cfa:leavesOpen ; cfm:objectConstant cfa:ComponentDetail ; cfm:onlyIfColumn "comp_detail" ; cfm:inValues "UNPINNED" ] ,
         [ cfm:predicate cfa:doesNotKeyOn ; cfm:objectConstant cfa:ComponentDetail ; cfm:onlyIfColumn "comp_detail" ; cfm:inValues "-" ] ,
         [ cfm:predicate cfa:system ; cfm:column "k_system" ; cfm:onlyIfColumn "k_system" ; cfm:matches "C\\d+" ;
-          cfm:objectTemplate "ncit:{value}" ] ,
+          cfm:objectTemplate "ncit:{value}" ; cfm:objectClass cfa:NCItConcept ] ,
         [ cfm:predicate cfa:leavesOpen ; cfm:objectConstant cfa:System ; cfm:onlyIfColumn "k_system" ; cfm:inValues "UNPINNED" ] ,
         [ cfm:predicate cfa:doesNotKeyOn ; cfm:objectConstant cfa:System ; cfm:onlyIfColumn "k_system" ; cfm:inValues "-" ] ,
         [ cfm:predicate cfa:scale ; cfm:column "k_scale" ; cfm:tokensFrom cfa:ScaleReading ] ,
         [ cfm:predicate cfa:method ; cfm:column "k_method" ; cfm:onlyIfColumn "k_method" ; cfm:matches "C\\d+" ;
-          cfm:objectTemplate "ncit:{value}" ] ,
+          cfm:objectTemplate "ncit:{value}" ; cfm:objectClass cfa:NCItConcept ] ,
         [ cfm:predicate cfa:leavesOpen ; cfm:objectConstant cfa:Method ; cfm:onlyIfColumn "k_method" ; cfm:inValues "UNPINNED" ] ,
         [ cfm:predicate cfa:doesNotKeyOn ; cfm:objectConstant cfa:Method ; cfm:onlyIfColumn "k_method" ; cfm:inValues "-" ] .
 
-# ================================================================ Specimen_Findings / Axis_Meaning
+# ================================================================ Findings files: file-specific sheets
 
-map:AxisMeaning a cfm:RowMapping ;
-    cfm:sourceFile map:SpecimenFile ; cfm:sourceSheet "Axis_Meaning" ;
-    cfm:scopeColumn "Domain" ; cfm:scopeSet "domain" ;
-    cfm:subject "var:{Key}" ;
-    cfm:class cfa:Variable ;
+# Instrument_Findings / BC_Categories: every QRS BC's categories, also BCs with no DSS.
+map:BCCategories a cfm:RowMapping ;
+    cfm:sourceFile map:InstrumentFile ; cfm:sourceSheet "BC_Categories" ;
+    cfm:onlyUnscoped true ;
+    cfm:subject "bc:{bc_id}" ;
+    cfm:class cfa:BiomedicalConcept ;
     cfm:property
-        [ cfm:predicate skos:notation ; cfm:column "Key" ] ,
-        [ cfm:predicate cfa:inDomain ; cfm:objectTemplate "dom:{Domain}" ] ,
-        [ cfm:predicate cfa:facetPosition ; cfm:column "Position" ; cfm:tokensFrom cfa:FacetPosition ] ,
-        [ cfm:predicate cfa:facetKind ; cfm:column "Kind" ; cfm:tokensFrom cfa:FacetKind ] ,
-        [ cfm:predicate cfa:positionStatus ; cfm:column "Status" ] ,
-        [ cfm:predicate cfa:positionBasis ; cfm:column "Basis" ] ,
-        [ cfm:predicate cfa:positionBasisNote ; cfm:column "Basis_Note" ] .
+        [ cfm:predicate rdfs:label ; cfm:onlyIfPresent "bc_short_name" ; cfm:literalTemplate "{bc_short_name} (COSMoS BC)" ] ,
+        [ cfm:predicate cfa:bcCategory ; cfm:column "category" ] ,
+        [ cfm:predicate cfa:isOfBCType ; cfm:column "bc_type" ; cfm:objectTemplate "val:bctype-{value}" ;
+          cfm:objectClass cfa:BCType ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate cfa:isUsedInDomain ; cfm:column "domains" ; cfm:split ";" ; cfm:objectTemplate "dom:{value}" ; cfm:objectClass cfa:Domain ] ,
+        [ cfm:predicate prov:wasDerivedFrom ; cfm:objectTemplate "src:{file_stem}" ] .
 
-map:AxisDomains a cfm:RowMapping ;
-    cfm:sourceFile map:SpecimenFile ; cfm:sourceSheet "Axis_Meaning" ;
-    cfm:scopeColumn "Domain" ; cfm:scopeSet "domain" ;
-    cfm:subject "dom:{Domain}" ;
-    cfm:class cfa:Domain ;
-    cfm:property [ cfm:predicate skos:notation ; cfm:column "Domain" ] .
+# Instrument_Findings / BC_Parents: the parallel BC chain of the instruments.
+map:BCParents a cfm:RowMapping ;
+    cfm:sourceFile map:InstrumentFile ; cfm:sourceSheet "BC_Parents" ;
+    cfm:onlyUnscoped true ;
+    cfm:subject "bc:{bc_id}" ;
+    cfm:class cfa:BiomedicalConcept ;
+    cfm:property
+        [ cfm:predicate rdfs:label ; cfm:onlyIfPresent "bc_short_name" ; cfm:literalTemplate "{bc_short_name} (COSMoS BC)" ] ,
+        [ cfm:predicate cfa:isOfBCType ; cfm:column "bc_type" ; cfm:objectTemplate "val:bctype-{value}" ;
+          cfm:objectClass cfa:BCType ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate cfa:isGroupedUnder ; cfm:column "parent_bc_id" ; cfm:objectTemplate "bc:{value}" ;
+          cfm:objectClass cfa:BiomedicalConcept ; cfm:objectLabel "{parent_bc_short_name} (COSMoS BC)" ] ,
+        [ cfm:predicate cfa:isOfBCType ; cfm:column "parent_bc_type" ; cfm:onSubject "bc:{parent_bc_id}" ;
+          cfm:objectTemplate "val:bctype-{value}" ; cfm:objectClass cfa:BCType ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate prov:wasDerivedFrom ; cfm:objectTemplate "src:{file_stem}" ] .
 
-# ================================================================ Specimen_Findings / Codelists
-# Phase 2: only the codelists and terms referenced by the variable specializations.
+# Immunogenicity_Findings / Test_Identity: NCI's parents of each IS test (the
+# rest of the sheet copies the identity file).
+map:ISTestParents a cfm:RowMapping ;
+    cfm:sourceFile map:ImmunogenicityFile ; cfm:sourceSheet "Test_Identity" ;
+    cfm:onlyUnscoped true ;
+    cfm:subject "ncit:{NCIt_Code}" ;
+    cfm:class cfa:NCItConcept ;
+    cfm:property
+        [ cfm:predicate skos:broader ; cfm:column "NCIt_Parent_Codes" ; cfm:split "|" ; cfm:valuePattern "C\\d+" ;
+          cfm:objectTemplate "ncit:{value}" ; cfm:objectClass cfa:NCItConcept ] ,
+        [ cfm:predicate skos:prefLabel ; cfm:column "NCIt_Parent_Codes" ; cfm:split "|" ;
+          cfm:pairedColumn "NCIt_Parent_Terms" ; cfm:pairedSplit "|" ; cfm:onSubject "ncit:{value}" ; cfm:literalTemplate "{pair}" ] .
+
+# Immunogenicity_Findings / Test_Ancestors: the NCIt chain above each IS test.
+map:ISTestAncestors a cfm:RowMapping ;
+    cfm:sourceFile map:ImmunogenicityFile ; cfm:sourceSheet "Test_Ancestors" ;
+    cfm:onlyUnscoped true ;
+    cfm:subject "ncit:{NCIt_Code}" ;
+    cfm:class cfa:NCItConcept ;
+    cfm:property
+        [ cfm:predicate skos:broaderTransitive ; cfm:column "Ancestor_Code" ; cfm:valuePattern "C\\d+" ;
+          cfm:objectTemplate "ncit:{value}" ; cfm:objectClass cfa:NCItConcept ] ,
+        [ cfm:predicate skos:prefLabel ; cfm:column "Ancestor_Term" ; cfm:onSubject "ncit:{Ancestor_Code}" ] ,
+        [ cfm:predicate skos:altLabel ; cfm:column "Ancestor_Synonyms" ; cfm:split "|" ; cfm:onSubject "ncit:{Ancestor_Code}" ] .
+
+# Findings files / Shared_Strings: strings that name more than one term of a
+# codelist. One node per (codelist, string), one use node per term.
+map:SharedStrings a cfm:RowMapping ;
+    cfm:sourceFile map:SpecimenFile, map:MeasurementFile, map:InstrumentFile, map:ImmunogenicityFile ;
+    cfm:sourceSheet "Shared_Strings" ;
+    cfm:onlyUnscoped true ;
+    cfm:derive [ cfm:as "cl_cc" ; cfm:order 1 ; cfm:fromVar "codelist_submission_value" ;
+                 cfm:lookupFile map:SpecimenFile, map:MeasurementFile, map:InstrumentFile, map:ImmunogenicityFile ;
+                 cfm:lookupSheet "Codelists" ; cfm:keyColumn "codelist_submission_value" ; cfm:valueColumn "codelist_concept_id" ] ;
+    cfm:subject "shu:{cl_cc}-{String}-{term_concept_id}" ;
+    cfm:class cfa:SharedStringUse ;
+    cfm:property
+        [ cfm:predicate rdfs:label ; cfm:literalTemplate "\"{String}\" for {codelist_submission_value}: {term_submission_value}" ] ,
+        [ cfm:predicate cfa:isUseOf ; cfm:objectTemplate "shs:{cl_cc}-{String}" ; cfm:objectClass cfa:SharedString ;
+          cfm:objectLabel "{String} (in {codelist_submission_value})" ] ,
+        [ cfm:predicate cfa:isUsedBy ; cfm:objectTemplate "clm:{cl_cc}-{term_concept_id}" ; cfm:objectClass cfa:CodelistMembership ] ,
+        [ cfm:predicate cfa:comesFrom ; cfm:column "Source" ; cfm:objectTemplate "val:source-{value}" ;
+          cfm:objectClass cfa:StringSource ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate cfa:occursInCodelist ; cfm:onSubject "shs:{cl_cc}-{String}" ; cfm:objectTemplate "cl:{cl_cc}" ] ,
+        [ cfm:predicate cfa:isSharedVia ; cfm:column "Shared_Via" ; cfm:onSubject "shs:{cl_cc}-{String}" ;
+          cfm:objectTemplate "val:sharedvia-{value}" ; cfm:objectClass cfa:SharingBasis ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate skos:notation ; cfm:column "String" ; cfm:onSubject "shs:{cl_cc}-{String}" ] .
+
+# ================================================================ Findings files: Codelists
+# Phase 2. In scoped profiles only the codelists and terms referenced by the
+# variable specializations; in the full profile every row.
 
 map:Codelists a cfm:RowMapping ;
     cfm:phase 2 ;
-    cfm:sourceFile map:SpecimenFile ; cfm:sourceSheet "Codelists" ;
+    cfm:sourceFile map:SpecimenFile, map:MeasurementFile, map:InstrumentFile, map:ImmunogenicityFile ;
+    cfm:sourceSheet "Codelists" ;
     cfm:restrictTo [ cfm:referenceSet "codelist" ; cfm:keyTemplate "{codelist_submission_value}" ] ;
     cfm:subject "cl:{codelist_concept_id}" ;
     cfm:class cfa:Codelist ;
     cfm:property
         [ cfm:predicate skos:notation ; cfm:column "codelist_submission_value" ] ,
         [ cfm:predicate rdfs:label ; cfm:column "codelist_name" ] ,
-        [ cfm:predicate cfa:isIdentifiedBy ; cfm:column "codelist_concept_id" ; cfm:valuePattern "C\\d+" ; cfm:objectTemplate "ncit:{value}" ] ,
+        [ cfm:predicate cfa:isIdentifiedBy ; cfm:column "codelist_concept_id" ; cfm:valuePattern "C\\d+" ; cfm:objectTemplate "ncit:{value}" ; cfm:objectClass cfa:NCItConcept ] ,
         [ cfm:predicate cfa:extensible ; cfm:column "codelist_extensible" ; cfm:datatype xsd:boolean ; cfm:trueToken "Yes" ] .
 
 map:CodelistMemberships a cfm:RowMapping ;
     cfm:phase 2 ;
-    cfm:sourceFile map:SpecimenFile ; cfm:sourceSheet "Codelists" ;
+    cfm:sourceFile map:SpecimenFile, map:MeasurementFile, map:InstrumentFile, map:ImmunogenicityFile ;
+    cfm:sourceSheet "Codelists" ;
     cfm:restrictTo [ cfm:referenceSet "term" ; cfm:keyTemplate "{codelist_submission_value}|{term_concept_id}" ] ;
     cfm:subject "clm:{codelist_concept_id}-{term_concept_id}" ;
     cfm:class cfa:CodelistMembership ;
     cfm:property
         [ cfm:predicate rdfs:label ; cfm:literalTemplate "{codelist_submission_value}: {term_submission_value}" ] ,
         [ cfm:predicate cfa:inCodelist ; cfm:objectTemplate "cl:{codelist_concept_id}" ] ,
-        [ cfm:predicate cfa:term ; cfm:column "term_concept_id" ; cfm:valuePattern "C\\d+" ; cfm:objectTemplate "ncit:{value}" ] ,
+        [ cfm:predicate cfa:term ; cfm:column "term_concept_id" ; cfm:valuePattern "C\\d+" ; cfm:objectTemplate "ncit:{value}" ; cfm:objectClass cfa:NCItConcept ] ,
         [ cfm:predicate cfa:submissionValue ; cfm:column "term_submission_value" ] ,
+        [ cfm:predicate skos:altLabel ; cfm:column "term_synonyms" ; cfm:split ";" ] ,
         [ cfm:predicate skos:prefLabel ; cfm:column "term_nci_preferred_term" ; cfm:onSubject "ncit:{term_concept_id}" ] ,
         [ cfm:predicate skos:definition ; cfm:column "term_definition" ; cfm:onSubject "ncit:{term_concept_id}" ] ,
         [ cfm:predicate skos:altLabel ; cfm:column "term_ncit_synonyms" ; cfm:split "|" ; cfm:onSubject "ncit:{term_concept_id}" ] .
+
+# ================================================================ SDTM_Domain_Metadata
+
+# Domains. Phase 2: in scoped profiles only the domains that appear in the graph.
+map:DomainNames a cfm:RowMapping ;
+    cfm:phase 2 ;
+    cfm:sourceFile map:DomainMetadataFile ; cfm:sourceSheet "Domains" ;
+    cfm:restrictTo [ cfm:referenceSet "domain" ; cfm:keyTemplate "{Domain}" ] ;
+    cfm:subject "dom:{Domain}" ;
+    cfm:class cfa:Domain ;
+    cfm:property
+        [ cfm:predicate rdfs:label ; cfm:column "Domain_Name" ] ,
+        [ cfm:predicate skos:notation ; cfm:column "Domain" ] ,
+        [ cfm:predicate skos:altLabel ; cfm:column "IG_Name" ] ,
+        [ cfm:predicate cfa:inObservationClass ; cfm:column "Observation_Class" ; cfm:objectTemplate "val:obsclass-{value}" ;
+          cfm:objectClass cfa:ObservationClass ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate cfa:igObservationClass ; cfm:column "IG_Class" ; cfm:objectTemplate "val:obsclass-{value}" ;
+          cfm:objectClass cfa:ObservationClass ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate cfa:igSection ; cfm:column "SDTMIG_Section" ] ,
+        [ cfm:predicate rdfs:comment ; cfm:column "Notes" ] .
+
+# Variable_Meaning: the positions per variable (each Findings file's
+# Axis_Meaning copies these rows).
+map:VariableMeaning a cfm:RowMapping ;
+    cfm:sourceFile map:DomainMetadataFile ; cfm:sourceSheet "Variable_Meaning" ;
+    cfm:scopeColumn "Domain" ; cfm:scopeSet "domain" ;
+    cfm:skipRowUnless "Domain" ;
+    cfm:subject "var:{Domain}-{Key}" ;
+    cfm:class cfa:Variable ;
+    cfm:property map:pvNotation, map:pvPosition, map:pvKind, map:pvStatus, map:pvBasis, map:pvBasisNote, map:pvKeySource,
+        [ cfm:predicate cfa:inDomain ; cfm:objectTemplate "dom:{Domain}" ] .
+
+# A position stated for no single domain ('scale'): a facet derived from the
+# result variables, not a variable.
+map:DerivedFacets a cfm:RowMapping ;
+    cfm:sourceFile map:DomainMetadataFile ; cfm:sourceSheet "Variable_Meaning" ;
+    cfm:onlyUnscoped true ;
+    cfm:skipRowIf "Domain" ;
+    cfm:subject "fct:{Key}" ;
+    cfm:class cfa:DerivedFacet ;
+    cfm:property map:pvNotation, map:pvPosition, map:pvKind, map:pvStatus, map:pvBasis, map:pvBasisNote, map:pvKeySource,
+        [ cfm:predicate rdfs:label ; cfm:literalTemplate "{Key} (derived facet)" ] .
+
+map:pvNotation  cfm:predicate skos:notation ; cfm:column "Key" .
+map:pvPosition  cfm:predicate cfa:facetPosition ; cfm:column "Position" ; cfm:tokensFrom cfa:FacetPosition .
+map:pvKind      cfm:predicate cfa:facetKind ; cfm:column "Kind" ; cfm:tokensFrom cfa:FacetKind .
+map:pvStatus    cfm:predicate cfa:positionStatus ; cfm:column "Status" .
+map:pvBasis     cfm:predicate cfa:positionBasis ; cfm:column "Basis" .
+map:pvBasisNote cfm:predicate cfa:positionBasisNote ; cfm:column "Basis_Note" .
+map:pvKeySource cfm:predicate cfa:isEvidencedBy ; cfm:column "Key_Source" ; cfm:objectTemplate "val:keysource-{value}" ;
+                cfm:objectClass cfa:KeySource ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" .
+
+map:VariableMeaningDomains a cfm:RowMapping ;
+    cfm:sourceFile map:DomainMetadataFile ; cfm:sourceSheet "Variable_Meaning" ;
+    cfm:scopeColumn "Domain" ; cfm:scopeSet "domain" ;
+    cfm:skipRowUnless "Domain" ;
+    cfm:subject "dom:{Domain}" ;
+    cfm:class cfa:Domain ;
+    cfm:property [ cfm:predicate skos:notation ; cfm:column "Domain" ;
+                   cfm:recordsReference [ cfm:referenceSet "domain" ; cfm:keyTemplate "{value}" ] ] .
+
+map:CodelistOverrides a cfm:RowMapping ;
+    cfm:sourceFile map:DomainMetadataFile ; cfm:sourceSheet "Codelist_Overrides" ;
+    cfm:onlyUnscoped true ;
+    cfm:subject "ovr:{CT_Display_Name}" ;
+    cfm:class cfa:NamingOverride ;
+    cfm:property
+        [ cfm:predicate rdfs:label ; cfm:column "CT_Display_Name" ] ,
+        [ cfm:predicate cfa:concernsDomain ; cfm:column "Domain" ; cfm:objectTemplate "dom:{value}" ; cfm:objectClass cfa:Domain ] ,
+        [ cfm:predicate cfa:isOverrideOfType ; cfm:column "Override_Type" ; cfm:objectTemplate "val:override-{value}" ;
+          cfm:objectClass cfa:OverrideType ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate rdfs:comment ; cfm:column "Notes" ] ,
+        [ cfm:predicate prov:wasDerivedFrom ; cfm:objectTemplate "src:{file_stem}" ] .
+
+map:InstrumentDomainRules a cfm:RowMapping ;
+    cfm:sourceFile map:DomainMetadataFile ; cfm:sourceSheet "Instrument_Domain_Rules" ;
+    cfm:onlyUnscoped true ;
+    cfm:subject "rule:{Keyword}" ;
+    cfm:class cfa:RoutingRule ;
+    cfm:property
+        [ cfm:predicate rdfs:label ; cfm:literalTemplate "{Keyword} goes to {Domain}" ] ,
+        [ cfm:predicate cfa:matchesKeyword ; cfm:column "Keyword" ] ,
+        [ cfm:predicate cfa:routesToDomain ; cfm:column "Domain" ; cfm:objectTemplate "dom:{value}" ; cfm:objectClass cfa:Domain ] ,
+        [ cfm:predicate rdfs:comment ; cfm:column "Notes" ] ,
+        [ cfm:predicate prov:wasDerivedFrom ; cfm:objectTemplate "src:{file_stem}" ] .
+
+map:NonObservationDatasets a cfm:RowMapping ;
+    cfm:sourceFile map:DomainMetadataFile ; cfm:sourceSheet "Non_Observation_Datasets" ;
+    cfm:onlyUnscoped true ;
+    cfm:subject "dset:{Dataset}" ;
+    cfm:class cfa:NonObservationDataset ;
+    cfm:property
+        [ cfm:predicate rdfs:label ; cfm:column "IG_Name" ] ,
+        [ cfm:predicate skos:notation ; cfm:column "Dataset" ] ,
+        [ cfm:predicate cfa:igObservationClass ; cfm:column "IG_Class" ; cfm:objectTemplate "val:obsclass-{value}" ;
+          cfm:objectClass cfa:ObservationClass ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate cfa:igSection ; cfm:column "SDTMIG_Section" ] ,
+        [ cfm:predicate rdfs:comment ; cfm:column "Reason" ] ,
+        [ cfm:predicate prov:wasDerivedFrom ; cfm:objectTemplate "src:{file_stem}" ] .
+
+map:ConsumerExclusions a cfm:RowMapping ;
+    cfm:sourceFile map:DomainMetadataFile ; cfm:sourceSheet "Consumer_Exclusions" ;
+    cfm:onlyUnscoped true ;
+    cfm:subject "excl:{Claim_ID}" ;
+    cfm:class cfa:ExclusionClaim ;
+    cfm:property
+        [ cfm:predicate rdfs:label ; cfm:literalTemplate "{Claim_ID}: {Claim}" ] ,
+        [ cfm:predicate skos:notation ; cfm:column "Claim_ID" ] ,
+        [ cfm:predicate cfa:isMadeFor ; cfm:column "Consumer" ; cfm:objectTemplate "src:{value}" ; cfm:objectClass cfa:SourceFile ] ,
+        [ cfm:predicate cfa:concernsDomain ; cfm:column "Domain" ; cfm:objectTemplate "dom:{value}" ; cfm:objectClass cfa:Domain ] ,
+        [ cfm:predicate cfa:claims ; cfm:column "Claim" ] ,
+        [ cfm:predicate cfa:isCheckedBy ; cfm:column "Check" ] ,
+        [ cfm:predicate cfa:isJustifiedBy ; cfm:column "Reason" ] ,
+        [ cfm:predicate prov:wasDerivedFrom ; cfm:objectTemplate "src:{file_stem}" ] .
+
+# ================================================================ Domain_Coverage
+
+map:DomainCoverage a cfm:RowMapping ;
+    cfm:sourceFile map:DomainCoverageFile ; cfm:sourceSheet "Domain_Coverage" ;
+    cfm:onlyUnscoped true ;
+    cfm:subject "dom:{Domain}" ;
+    cfm:class cfa:Domain ;
+    cfm:property
+        [ cfm:predicate cfa:isCoveredBy ; cfm:column "Consumer" ; cfm:objectTemplate "src:{value}" ; cfm:objectClass cfa:SourceFile ] ,
+        [ cfm:predicate cfa:coverageIs ; cfm:column "Coverage_Status" ; cfm:objectTemplate "val:coverage-{value}" ;
+          cfm:objectClass cfa:CoverageStatus ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate cfa:isFoundIn ; cfm:column "Where_To_Look" ] ,
+        [ cfm:predicate cfa:namesDSSCodelist ; cfm:column "DSS_Codelists" ; cfm:split "," ] ,
+        [ cfm:predicate cfa:coverageReason ; cfm:column "Reason" ] ,
+        [ cfm:predicate rdfs:comment ; cfm:column "Domain_Notes" ] .
+
+# ================================================================ SDTM_Variables
+
+# SDTM v2.0 Model variables (generic, e.g. --TESTCD), per observation class.
+map:ModelVariables a cfm:RowMapping ;
+    cfm:sourceFile map:VariablesFile ; cfm:sourceSheet "Model_Variables" ;
+    cfm:onlyUnscoped true ;
+    cfm:subject "mvar:{Class}-{Variable_Name}" ;
+    cfm:class cfa:ModelVariable ;
+    cfm:property
+        [ cfm:predicate skos:notation ; cfm:column "Variable Name" ] ,
+        [ cfm:predicate rdfs:label ; cfm:column "Variable Label" ] ,
+        [ cfm:predicate cfa:inObservationClass ; cfm:column "Class" ; cfm:objectTemplate "val:obsclass-{value}" ;
+          cfm:objectClass cfa:ObservationClass ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate cfa:isStoredAs ; cfm:column "Type" ; cfm:objectTemplate "val:datatype-{value}" ;
+          cfm:objectClass cfa:DataType ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate cfa:playsRole ; cfm:column "Role" ; cfm:objectTemplate "val:role-{value}" ;
+          cfm:objectClass cfa:VariableRole ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate cfa:qualifies ; cfm:column "Variables Qualified" ; cfm:split ";" ;
+          cfm:objectTemplate "mvar:{Class}-{value}" ; cfm:objectClass cfa:ModelVariable ] ,
+        [ cfm:predicate cfa:restrictedTo ; cfm:column "Usage Restrictions" ] ,
+        [ cfm:predicate cfa:describedValueDomain ; cfm:column "Described Value Domain" ] ,
+        [ cfm:predicate cfa:isIdentifiedBy ; cfm:column "Variable C-Code" ; cfm:valuePattern "C\\d+" ;
+          cfm:objectTemplate "ncit:{value}" ; cfm:objectClass cfa:NCItConcept ] ,
+        [ cfm:predicate skos:prefLabel ; cfm:column "NCIt_Preferred_Term" ; cfm:onlyIfPresent "Variable C-Code" ; cfm:onSubject "ncit:{Variable_C_Code}" ] ,
+        [ cfm:predicate skos:broader ; cfm:column "NCIt_Parent_Codes" ; cfm:split "|" ; cfm:onlyIfPresent "Variable C-Code" ;
+          cfm:onSubject "ncit:{Variable_C_Code}" ; cfm:objectTemplate "ncit:{value}" ; cfm:objectClass cfa:NCItConcept ] ,
+        [ cfm:predicate skos:prefLabel ; cfm:column "NCIt_Parent_Codes" ; cfm:split "|" ;
+          cfm:pairedColumn "NCIt_Parent_Terms" ; cfm:pairedSplit "|" ; cfm:onSubject "ncit:{value}" ; cfm:literalTemplate "{pair}" ] ,
+        [ cfm:predicate skos:definition ; cfm:column "Definition" ] ,
+        [ cfm:predicate skos:scopeNote ; cfm:column "Notes" ] ,
+        [ cfm:predicate skos:example ; cfm:column "Examples" ] ,
+        [ cfm:predicate prov:wasDerivedFrom ; cfm:objectTemplate "src:{file_stem}" ] .
+
+# SDTMIG v3.4 variables per dataset. Variables without a domain prefix
+# (STUDYID, USUBJID, ...) occur in every dataset, so the IRI is dataset + name.
+map:DomainVariables a cfm:RowMapping ;
+    cfm:sourceFile map:VariablesFile ; cfm:sourceSheet "Domain_Variables" ;
+    cfm:onlyUnscoped true ;
+    cfm:subject "var:{Dataset_Name}-{Variable_Name}" ;
+    cfm:class cfa:Variable ;
+    cfm:property
+        [ cfm:predicate skos:notation ; cfm:column "Variable Name" ] ,
+        [ cfm:predicate rdfs:label ; cfm:column "Variable Label" ] ,
+        [ cfm:predicate cfa:inDomain ; cfm:column "Dataset Name" ; cfm:objectTemplate "dom:{value}" ; cfm:objectClass cfa:Domain ] ,
+        [ cfm:predicate cfa:isOrderedAt ; cfm:column "Variable Order" ; cfm:datatype xsd:integer ] ,
+        [ cfm:predicate cfa:isStoredAs ; cfm:column "Type" ; cfm:objectTemplate "val:datatype-{value}" ;
+          cfm:objectClass cfa:DataType ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate cfa:drawsFrom ; cfm:column "CDISC CT Codelist Code(s)" ; cfm:split ";" ; cfm:valuePattern "C\\d+" ;
+          cfm:objectTemplate "cl:{value}" ; cfm:objectClass cfa:Codelist ] ,
+        [ cfm:predicate cfa:isIdentifiedBy ; cfm:column "CDISC CT Codelist Code(s)" ; cfm:split ";" ; cfm:onSubject "cl:{value}" ;
+          cfm:objectTemplate "ncit:{value}" ; cfm:objectClass cfa:NCItConcept ] ,
+        [ cfm:predicate cfa:describedValueDomain ; cfm:column "Described Value Domain(s)" ] ,
+        [ cfm:predicate cfa:valueList ; cfm:column "Value List" ] ,
+        [ cfm:predicate cfa:playsRole ; cfm:column "Role" ; cfm:objectTemplate "val:role-{value}" ;
+          cfm:objectClass cfa:VariableRole ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate skos:scopeNote ; cfm:column "CDISC Notes" ] ,
+        [ cfm:predicate cfa:isDesignated ; cfm:column "Core" ; cfm:objectTemplate "val:core-{value}" ;
+          cfm:objectClass cfa:CoreDesignation ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate cfa:instantiates ; cfm:onlyIfPresent "Generic_Variable" ; cfm:objectTemplate "mvar:{Model_Class}-{Generic_Variable}" ;
+          cfm:objectClass cfa:ModelVariable ] ,
+        [ cfm:predicate cfa:isNamedIn ; cfm:column "Statements_Naming" ; cfm:split ";" ; cfm:objectTemplate "stmt:{value}" ; cfm:objectClass cfa:IGStatement ] ,
+        [ cfm:predicate prov:wasDerivedFrom ; cfm:objectTemplate "src:{file_stem}" ] .
+
+# ================================================================ SDTMIG_Statements
+
+map:IGStatements a cfm:RowMapping ;
+    cfm:sourceFile map:StatementsFile ; cfm:sourceSheet "Statements" ;
+    cfm:onlyUnscoped true ;
+    cfm:subject "stmt:{Statement_ID}" ;
+    cfm:class cfa:IGStatement ;
+    cfm:property
+        [ cfm:predicate rdfs:label ; cfm:literalTemplate "SDTMIG statement {Statement_ID}" ] ,
+        [ cfm:predicate skos:notation ; cfm:column "Statement_ID" ] ,
+        [ cfm:predicate cfa:wasSelectedAs ; cfm:column "Selected_As" ; cfm:objectTemplate "val:selection-{value}" ;
+          cfm:objectClass cfa:StatementSelection ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate dct:source ; cfm:column "Source" ] ,
+        [ cfm:predicate cfa:appearsInSection ; cfm:column "Section" ] ,
+        [ cfm:predicate cfa:isItem ; cfm:column "Item" ] ,
+        [ cfm:predicate cfa:isOnPage ; cfm:column "Page" ] ,
+        [ cfm:predicate cfa:isStatedForDomain ; cfm:column "Domain" ; cfm:objectTemplate "dom:{value}" ; cfm:objectClass cfa:Domain ] ,
+        [ cfm:predicate cfa:namesVariable ; cfm:column "Variables_Named" ; cfm:split ";" ; cfm:bindPrefix 2 ; cfm:skipUnlessPattern "[A-Z]{2}.*" ;
+          cfm:objectTemplate "var:{value_prefix}-{value}" ; cfm:objectClass cfa:Variable ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate cfa:namesVariable ; cfm:column "Model_Variables_Named" ; cfm:split ";" ; cfm:bindPrefix 2 ; cfm:skipUnlessPattern "[A-Z]{2}.*" ;
+          cfm:objectTemplate "var:{value_prefix}-{value}" ; cfm:objectClass cfa:Variable ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate cfa:namesDomain ; cfm:column "Domains_Named" ; cfm:split ";" ; cfm:objectTemplate "dom:{value}" ; cfm:objectClass cfa:Domain ] ,
+        [ cfm:predicate cfa:states ; cfm:column "Text" ] ,
+        [ cfm:predicate prov:wasDerivedFrom ; cfm:objectTemplate "src:{file_stem}" ] .
+
+map:IGStatementModelVariables a cfm:RowMapping ;
+    cfm:sourceFile map:StatementsFile ; cfm:sourceSheet "Statements" ;
+    cfm:onlyUnscoped true ;
+    cfm:forEachSplit [ cfm:column "Model_Variables_Named" ; cfm:split ";" ; cfm:as "mv" ] ;
+    cfm:derive
+        [ cfm:as "dclass" ; cfm:order 1 ; cfm:fromVar "Domain" ; cfm:optional true ;
+          cfm:lookupFile map:DomainMetadataFile ; cfm:lookupSheet "Domains" ; cfm:keyColumn "Domain" ; cfm:valueColumn "Observation_Class" ] ,
+        [ cfm:as "mv_class" ; cfm:order 2 ; cfm:optional true ;
+          cfm:lookupFile map:VariablesFile ; cfm:lookupSheet "Model_Variables" ;
+          cfm:lookupKeyTemplate "{Class}|{Variable_Name}" ; cfm:valueColumn "Class" ;
+          cfm:keyTemplate "{dclass}|{mv}" ; cfm:fallbackKeyTemplate "General Observations|{mv}" ] ;
+    cfm:subject "stmt:{Statement_ID}" ;
+    cfm:property
+        [ cfm:predicate cfa:namesModelVariable ; cfm:column "mv" ; cfm:skipUnlessPattern "--.*" ; cfm:onlyIfPresent "mv_class" ;
+          cfm:objectTemplate "mvar:{mv_class}-{value}" ; cfm:objectClass cfa:ModelVariable ] .
+
+# ================================================================ Codelist_Phrases
+
+# Phrases: one row per phrase and term. A phrase node per normalized phrase, an
+# occurrence node per (term, phrase, field).
+map:PhraseOccurrences a cfm:RowMapping ;
+    cfm:sourceFile map:CodelistPhrasesFile ; cfm:sourceSheet "Phrases" ;
+    cfm:onlyUnscoped true ;
+    cfm:subject "pho:{codelist_concept_id}-{term_concept_id}-{phrase}-{field}" ;
+    cfm:class cfa:PhraseOccurrence ;
+    cfm:property
+        [ cfm:predicate rdfs:label ; cfm:literalTemplate "\"{phrase}\" for {codelist_submission_value}: {term_submission_value}" ] ,
+        [ cfm:predicate cfa:isOccurrenceOf ; cfm:objectTemplate "phr:{phrase}" ; cfm:objectClass cfa:Phrase ; cfm:objectLabel "{phrase}" ] ,
+        [ cfm:predicate cfa:compactsTo ; cfm:column "phrase_compact" ; cfm:onSubject "phr:{phrase}" ] ,
+        [ cfm:predicate cfa:names ; cfm:objectTemplate "clm:{codelist_concept_id}-{term_concept_id}" ; cfm:objectClass cfa:CodelistMembership ] ,
+        [ cfm:predicate cfa:occursInField ; cfm:column "field" ; cfm:objectTemplate "val:field-{value}" ;
+          cfm:objectClass cfa:PhraseField ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate cfa:comesFrom ; cfm:column "source" ; cfm:objectTemplate "val:source-{value}" ;
+          cfm:objectClass cfa:StringSource ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate cfa:isPublishedAs ; cfm:column "as_published" ] ,
+        [ cfm:predicate prov:wasDerivedFrom ; cfm:objectTemplate "src:{file_stem}" ] .
+
+# Test_String_Collisions: strings that name more than one test concept.
+map:TestStringCollisions a cfm:RowMapping ;
+    cfm:sourceFile map:CodelistPhrasesFile ; cfm:sourceSheet "Test_String_Collisions" ;
+    cfm:onlyUnscoped true ;
+    cfm:subject "collr:{String}-{NCIt_Code}" ;
+    cfm:class cfa:CollisionReading ;
+    cfm:property
+        [ cfm:predicate rdfs:label ; cfm:literalTemplate "\"{String}\" as {TEST}" ] ,
+        [ cfm:predicate cfa:isReadingOf ; cfm:objectTemplate "coll:{String}" ; cfm:objectClass cfa:TestStringCollision ; cfm:objectLabel "{String}" ] ,
+        [ cfm:predicate cfa:namesTestConcept ; cfm:column "NCIt_Code" ; cfm:valuePattern "C\\d+" ;
+          cfm:objectTemplate "ncit:{value}" ; cfm:objectClass cfa:NCItConcept ] ,
+        [ cfm:predicate cfa:isSharedVia ; cfm:column "Shared_Via" ; cfm:objectTemplate "val:sharedvia-{value}" ;
+          cfm:objectClass cfa:SharingBasis ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate cfa:occursInField ; cfm:column "Fields" ; cfm:split "|" ; cfm:objectTemplate "val:field-{value}" ;
+          cfm:objectClass cfa:PhraseField ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate cfa:comesFrom ; cfm:column "Source" ; cfm:objectTemplate "val:source-{value}" ;
+          cfm:objectClass cfa:StringSource ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate cfa:differsOnlyInCase ; cfm:column "Case_Differs" ; cfm:datatype xsd:boolean ; cfm:trueToken "yes" ] ,
+        [ cfm:predicate cfa:isPublishedAs ; cfm:column "As_Published" ] ,
+        [ cfm:predicate prov:wasDerivedFrom ; cfm:objectTemplate "src:{file_stem}" ] .
+
+# Folded_Facets: test terms that are candidates for a facet folded into the test code.
+map:FoldedFacets a cfm:RowMapping ;
+    cfm:sourceFile map:CodelistPhrasesFile ; cfm:sourceSheet "Folded_Facets" ;
+    cfm:onlyUnscoped true ;
+    cfm:subject "fold:{Domain}-{TESTCD}" ;
+    cfm:class cfa:FoldedFacetCandidate ;
+    cfm:property
+        [ cfm:predicate rdfs:label ; cfm:literalTemplate "{TEST}: \"{Head}\" + \"{Tail}\"" ] ,
+        [ cfm:predicate cfa:concernsTestCode ; cfm:objectTemplate "tc:{Domain}-{TESTCD}" ; cfm:objectClass cfa:TestCode ;
+          cfm:objectLabel "{TEST}" ; cfm:objectNotation "{TESTCD}" ] ,
+        [ cfm:predicate cfa:isIdentifiedBy ; cfm:column "NCIt_Code" ; cfm:valuePattern "C\\d+" ; cfm:onSubject "tc:{Domain}-{TESTCD}" ;
+          cfm:objectTemplate "ncit:{value}" ; cfm:objectClass cfa:NCItConcept ] ,
+        [ cfm:predicate cfa:inDomain ; cfm:onSubject "tc:{Domain}-{TESTCD}" ; cfm:objectTemplate "dom:{Domain}" ] ,
+        [ cfm:predicate cfa:splitsOffHead ; cfm:column "Head" ] ,
+        [ cfm:predicate cfa:splitsOffTail ; cfm:column "Tail" ] ,
+        [ cfm:predicate cfa:isEvidencedBy ; cfm:column "Evidence" ; cfm:split ";" ; cfm:objectTemplate "val:evidence-{value}" ;
+          cfm:objectClass cfa:FoldEvidence ; cfm:objectLabel "{value}" ; cfm:objectNotation "{value}" ] ,
+        [ cfm:predicate cfa:evidenceDetail ; cfm:column "Evidence_Detail" ] ,
+        [ cfm:predicate prov:wasDerivedFrom ; cfm:objectTemplate "src:{file_stem}" ] .

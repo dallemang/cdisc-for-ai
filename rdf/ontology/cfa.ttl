@@ -2,7 +2,8 @@
 #
 # Design rule: CDISC artifacts (test codes, Biomedical Concepts, Dataset
 # Specializations, codelists, variables) get their own IRIs in cfi:. NCIt
-# concepts keep their NCIt IRIs and are never typed with cfa: classes. Every
+# concepts keep their NCIt IRIs and are typed cfa:NCItConcept (a skos:Concept),
+# never owl:Class. Every
 # link between the two says which kind of link it is, following the link kinds
 # in link-semantics/docs/Link_Semantics.md (cfa:linkKind on each property).
 #
@@ -35,6 +36,9 @@ cfa:TestCode a owl:Class ; rdfs:label "SDTM test code (domain-scoped)" ;
 
 cfa:BiomedicalConcept a owl:Class ; rdfs:label "COSMoS Biomedical Concept" .
 
+cfa:NCItConcept a owl:Class ; rdfs:subClassOf skos:Concept ; rdfs:label "NCIt concept" ;
+    rdfs:comment "A concept of the NCI Thesaurus, used here under NCI's own IRI. Typed as a SKOS concept, a thing that terms and codes denote, rather than an owl:Class as in NCI's OWL release, whose everything-is-a-class pattern comes from OBO practice." .
+
 cfa:DatasetSpecialization a owl:Class ; rdfs:label "COSMoS SDTM Dataset Specialization" ;
     rdfs:comment "DS codes are not unique across domains, so the IRI is domain + DS code." .
 
@@ -56,6 +60,8 @@ cfa:Method    a cfa:FacetPosition ; rdfs:label "method" .
 cfa:Scale     a cfa:FacetPosition ; rdfs:label "scale" .
 cfa:ComponentDetail a cfa:FacetPosition ; rdfs:label "component detail" ;
     rdfs:comment "The test detail that is part of the component in MB, MI and GF keys (e.g. DETECTION). Used only with cfa:leavesOpen / cfa:doesNotKeyOn; it is not one of the positions in Axis_Meaning." .
+cfa:NotPartOfObservable a cfa:FacetPosition ; rdfs:label "not part of the observable" ;
+    rdfs:comment "The facet does not make a different observable (Observables_Direction: Identity)." .
 cfa:OpenPosition a cfa:FacetPosition ; rdfs:label "open" ; rdfs:comment "No source settles whether the facet identifies the observable." .
 
 cfa:FacetKind a owl:Class ; rdfs:label "Facet kind" .
@@ -184,3 +190,122 @@ cfa:positionBasisNote rdfs:label "position is explained by" .
 cfa:sourceVersion   rdfs:label "is built from version" .
 cfa:contentSha256   rdfs:label "records sheet hash" .
 cfa:linkKind        rdfs:label "expresses link kind" .
+
+# ================================================================ added for the full conversion
+# Classes for the remaining reference files.
+
+cfa:Instrument a owl:Class ; rdfs:label "Instrument" ;
+    rdfs:comment "A questionnaire, functional test or rating scale, as represented by its test-code codelist (SDTM_Instrument_Identity)." .
+cfa:ModelVariable a owl:Class ; rdfs:label "SDTM Model variable" ;
+    rdfs:comment "A generic SDTM v2.0 Model variable (e.g. --TESTCD) in one observation class." .
+cfa:DerivedFacet a owl:Class ; rdfs:label "Derived facet" ;
+    rdfs:comment "A facet that no single variable carries (e.g. result scale, read from the result variables)." .
+cfa:IGStatement a owl:Class ; rdfs:label "SDTMIG statement" ;
+    rdfs:comment "A statement of SDTMIG v3.4, quoted with section, item and page (SDTMIG_Statements)." .
+cfa:SharedString a owl:Class ; rdfs:label "Shared string" ;
+    rdfs:comment "A string that names more than one term of one codelist." .
+cfa:SharedStringUse a owl:Class ; rdfs:label "Shared string use" ;
+    rdfs:comment "One term's use of a shared string." .
+cfa:Phrase a owl:Class ; rdfs:label "Phrase" ;
+    rdfs:comment "A normalized phrase from the Codelist_Phrases index." .
+cfa:PhraseOccurrence a owl:Class ; rdfs:label "Phrase occurrence" ;
+    rdfs:comment "A phrase as it occurs for one codelist term, in one field." .
+cfa:TestStringCollision a owl:Class ; rdfs:label "Test string collision" ;
+    rdfs:comment "A string that names more than one test concept." .
+cfa:CollisionReading a owl:Class ; rdfs:label "Collision reading" ;
+    rdfs:comment "One test concept that a colliding string names." .
+cfa:FoldedFacetCandidate a owl:Class ; rdfs:label "Folded facet candidate" ;
+    rdfs:comment "A test term that may fold a facet into the test code (Folded_Facets)." .
+cfa:NamingOverride a owl:Class ; rdfs:label "Naming override" .
+cfa:RoutingRule a owl:Class ; rdfs:label "Instrument routing rule" ;
+    rdfs:comment "Which domain an instrument goes to, by keyword (Instrument_Domain_Rules)." .
+cfa:NonObservationDataset a owl:Class ; rdfs:label "Non-observation dataset" ;
+    rdfs:comment "An SDTM dataset that holds no observations (e.g. RELREC)." .
+cfa:ExclusionClaim a owl:Class ; rdfs:label "Exclusion claim" ;
+    rdfs:comment "A claim behind a Findings consumer's scope, with the check that tests it (Consumer_Exclusions)." .
+
+# Value lists from the data, each value an individual (things, not strings).
+cfa:ObservationClass  a owl:Class ; rdfs:subClassOf skos:Concept ; rdfs:label "Observation class" .
+cfa:VariableRole      a owl:Class ; rdfs:subClassOf skos:Concept ; rdfs:label "Variable role" .
+cfa:CoreDesignation   a owl:Class ; rdfs:subClassOf skos:Concept ; rdfs:label "Core designation" .
+cfa:DataType          a owl:Class ; rdfs:subClassOf skos:Concept ; rdfs:label "Data type" .
+cfa:StatementSelection a owl:Class ; rdfs:subClassOf skos:Concept ; rdfs:label "Statement selection" .
+cfa:PhraseField       a owl:Class ; rdfs:subClassOf skos:Concept ; rdfs:label "Phrase field" .
+cfa:StringSource      a owl:Class ; rdfs:subClassOf skos:Concept ; rdfs:label "String source" .
+cfa:SharingBasis      a owl:Class ; rdfs:subClassOf skos:Concept ; rdfs:label "Sharing basis" .
+cfa:CoverageStatus    a owl:Class ; rdfs:subClassOf skos:Concept ; rdfs:label "Coverage status" .
+cfa:FoldEvidence      a owl:Class ; rdfs:subClassOf skos:Concept ; rdfs:label "Fold evidence" .
+cfa:BCType            a owl:Class ; rdfs:subClassOf skos:Concept ; rdfs:label "BC type" .
+cfa:MatchMethod       a owl:Class ; rdfs:subClassOf skos:Concept ; rdfs:label "Match method" .
+cfa:KeySource         a owl:Class ; rdfs:subClassOf skos:Concept ; rdfs:label "Key source" .
+cfa:OverrideType      a owl:Class ; rdfs:subClassOf skos:Concept ; rdfs:label "Override type" .
+
+# Object properties (subject - label - object reads as a sentence).
+cfa:belongsToInstrument a owl:ObjectProperty ; rdfs:range cfa:Instrument ; rdfs:label "belongs to instrument" .
+cfa:listsQuestionsIn    a owl:ObjectProperty ; rdfs:domain cfa:Instrument ; rdfs:range cfa:Codelist ; rdfs:label "lists its questions in" .
+cfa:groupsQuestionsUnder a owl:ObjectProperty ; rdfs:domain cfa:Instrument ; rdfs:label "groups its questions under" .
+cfa:wasMatchedBy        a owl:ObjectProperty ; rdfs:domain cfa:Instrument ; rdfs:range cfa:MatchMethod ; rdfs:label "was matched to NCIt by" .
+cfa:inObservationClass  a owl:ObjectProperty ; rdfs:range cfa:ObservationClass ; rdfs:label "belongs to observation class" .
+cfa:igObservationClass  a owl:ObjectProperty ; rdfs:range cfa:ObservationClass ; rdfs:label "is classed in the IG as" .
+cfa:isKeyedOn           a owl:ObjectProperty ; rdfs:domain cfa:DatasetSpecialization ; rdfs:range cfa:Variable ; rdfs:label "is keyed on" .
+cfa:isGroupedUnder      a owl:ObjectProperty ; rdfs:domain cfa:BiomedicalConcept ; rdfs:range cfa:BiomedicalConcept ; rdfs:label "is grouped under" .
+cfa:isOfBCType          a owl:ObjectProperty ; rdfs:range cfa:BCType ; rdfs:label "is of BC type" .
+cfa:isUsedInDomain      a owl:ObjectProperty ; rdfs:range cfa:Domain ; rdfs:label "is used in domain" .
+cfa:isEvidencedBy       a owl:ObjectProperty ; rdfs:label "is evidenced by" .
+cfa:isCoveredBy         a owl:ObjectProperty ; rdfs:domain cfa:Domain ; rdfs:range cfa:SourceFile ; rdfs:label "is covered by" .
+cfa:coverageIs          a owl:ObjectProperty ; rdfs:domain cfa:Domain ; rdfs:range cfa:CoverageStatus ; rdfs:label "coverage is" .
+cfa:playsRole           a owl:ObjectProperty ; rdfs:range cfa:VariableRole ; rdfs:label "plays role" .
+cfa:isStoredAs          a owl:ObjectProperty ; rdfs:range cfa:DataType ; rdfs:label "is stored as" .
+cfa:isDesignated        a owl:ObjectProperty ; rdfs:range cfa:CoreDesignation ; rdfs:label "is designated" .
+cfa:instantiates        a owl:ObjectProperty ; rdfs:domain cfa:Variable ; rdfs:range cfa:ModelVariable ; rdfs:label "instantiates" .
+cfa:qualifies           a owl:ObjectProperty ; rdfs:domain cfa:ModelVariable ; rdfs:range cfa:ModelVariable ; rdfs:label "qualifies" .
+cfa:isNamedIn           a owl:ObjectProperty ; rdfs:range cfa:IGStatement ; rdfs:label "is named in" .
+cfa:namesVariable       a owl:ObjectProperty ; rdfs:domain cfa:IGStatement ; rdfs:range cfa:Variable ; rdfs:label "names variable" .
+cfa:namesModelVariable  a owl:ObjectProperty ; rdfs:domain cfa:IGStatement ; rdfs:range cfa:ModelVariable ; rdfs:label "names model variable" .
+cfa:namesDomain         a owl:ObjectProperty ; rdfs:domain cfa:IGStatement ; rdfs:range cfa:Domain ; rdfs:label "names domain" .
+cfa:isStatedForDomain   a owl:ObjectProperty ; rdfs:domain cfa:IGStatement ; rdfs:range cfa:Domain ; rdfs:label "is stated for domain" .
+cfa:wasSelectedAs       a owl:ObjectProperty ; rdfs:domain cfa:IGStatement ; rdfs:range cfa:StatementSelection ; rdfs:label "was selected as" .
+cfa:occursInCodelist    a owl:ObjectProperty ; rdfs:domain cfa:SharedString ; rdfs:range cfa:Codelist ; rdfs:label "occurs in codelist" .
+cfa:isUseOf             a owl:ObjectProperty ; rdfs:domain cfa:SharedStringUse ; rdfs:range cfa:SharedString ; rdfs:label "is a use of" .
+cfa:isUsedBy            a owl:ObjectProperty ; rdfs:domain cfa:SharedStringUse ; rdfs:range cfa:CodelistMembership ; rdfs:label "is used by" .
+cfa:isSharedVia         a owl:ObjectProperty ; rdfs:range cfa:SharingBasis ; rdfs:label "is shared via" .
+cfa:comesFrom           a owl:ObjectProperty ; rdfs:range cfa:StringSource ; rdfs:label "comes from" .
+cfa:isOccurrenceOf      a owl:ObjectProperty ; rdfs:domain cfa:PhraseOccurrence ; rdfs:range cfa:Phrase ; rdfs:label "is an occurrence of" .
+cfa:names               a owl:ObjectProperty ; rdfs:domain cfa:PhraseOccurrence ; rdfs:range cfa:CodelistMembership ; rdfs:label "names" .
+cfa:occursInField       a owl:ObjectProperty ; rdfs:range cfa:PhraseField ; rdfs:label "occurs in field" .
+cfa:isReadingOf         a owl:ObjectProperty ; rdfs:domain cfa:CollisionReading ; rdfs:range cfa:TestStringCollision ; rdfs:label "is a reading of" .
+cfa:namesTestConcept    a owl:ObjectProperty ; rdfs:domain cfa:CollisionReading ; rdfs:range cfa:NCItConcept ; rdfs:label "names test concept" .
+cfa:concernsTestCode    a owl:ObjectProperty ; rdfs:range cfa:TestCode ; rdfs:label "concerns test code" .
+cfa:concernsDomain      a owl:ObjectProperty ; rdfs:range cfa:Domain ; rdfs:label "concerns domain" .
+cfa:isOverrideOfType    a owl:ObjectProperty ; rdfs:domain cfa:NamingOverride ; rdfs:range cfa:OverrideType ; rdfs:label "is an override of type" .
+cfa:routesToDomain      a owl:ObjectProperty ; rdfs:domain cfa:RoutingRule ; rdfs:range cfa:Domain ; rdfs:label "routes to domain" .
+cfa:isMadeFor           a owl:ObjectProperty ; rdfs:domain cfa:ExclusionClaim ; rdfs:range cfa:SourceFile ; rdfs:label "is made for" .
+
+# Datatype properties.
+cfa:ncimCui             a owl:DatatypeProperty ; rdfs:label "is coded in NCIm as" .
+cfa:allowsUnit          a owl:DatatypeProperty ; rdfs:domain cfa:DatasetSpecialization ; rdfs:label "allows unit" .
+cfa:validFromIG         a owl:DatatypeProperty ; rdfs:label "applies from SDTMIG version" .
+cfa:validUntilIG        a owl:DatatypeProperty ; rdfs:label "applies until SDTMIG version" .
+cfa:questionCount       a owl:DatatypeProperty ; rdfs:domain cfa:Instrument ; rdfs:label "has this many questions" .
+cfa:isOrderedAt         a owl:DatatypeProperty ; rdfs:label "is ordered at" .
+cfa:describedValueDomain a owl:DatatypeProperty ; rdfs:label "takes values described as" .
+cfa:valueList           a owl:DatatypeProperty ; rdfs:label "lists values" .
+cfa:restrictedTo        a owl:DatatypeProperty ; rdfs:label "is restricted to" .
+cfa:igSection           a owl:DatatypeProperty ; rdfs:label "is described in SDTMIG section" .
+cfa:appearsInSection    a owl:DatatypeProperty ; rdfs:domain cfa:IGStatement ; rdfs:label "appears in section" .
+cfa:isItem              a owl:DatatypeProperty ; rdfs:domain cfa:IGStatement ; rdfs:label "is item" .
+cfa:isOnPage            a owl:DatatypeProperty ; rdfs:domain cfa:IGStatement ; rdfs:label "is on page" .
+cfa:states              a owl:DatatypeProperty ; rdfs:domain cfa:IGStatement ; rdfs:label "states" .
+cfa:isFoundIn           a owl:DatatypeProperty ; rdfs:label "is found in" .
+cfa:namesDSSCodelist    a owl:DatatypeProperty ; rdfs:label "names DSS codelist" .
+cfa:coverageReason      a owl:DatatypeProperty ; rdfs:label "coverage is explained by" .
+cfa:compactsTo          a owl:DatatypeProperty ; rdfs:domain cfa:Phrase ; rdfs:label "compacts to" .
+cfa:isPublishedAs       a owl:DatatypeProperty ; rdfs:label "is published as" .
+cfa:differsOnlyInCase   a owl:DatatypeProperty ; rdfs:range xsd:boolean ; rdfs:label "differs only in case" .
+cfa:splitsOffHead       a owl:DatatypeProperty ; rdfs:domain cfa:FoldedFacetCandidate ; rdfs:label "splits off head" .
+cfa:splitsOffTail       a owl:DatatypeProperty ; rdfs:domain cfa:FoldedFacetCandidate ; rdfs:label "splits off tail" .
+cfa:evidenceDetail      a owl:DatatypeProperty ; rdfs:label "is evidenced in detail by" .
+cfa:matchesKeyword      a owl:DatatypeProperty ; rdfs:domain cfa:RoutingRule ; rdfs:label "matches keyword" .
+cfa:claims              a owl:DatatypeProperty ; rdfs:domain cfa:ExclusionClaim ; rdfs:label "claims" .
+cfa:isCheckedBy         a owl:DatatypeProperty ; rdfs:domain cfa:ExclusionClaim ; rdfs:label "is checked by" .
+cfa:isJustifiedBy       a owl:DatatypeProperty ; rdfs:domain cfa:ExclusionClaim ; rdfs:label "is justified by" .
